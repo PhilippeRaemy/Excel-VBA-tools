@@ -31,7 +31,7 @@ Public Sub CheckinCode(Optional Checkin As Boolean)
   
   Dim wshsh As WshShell: Set wshsh = New WshShell
   
-  FileName = DocumentActiveWorkbook(wshsh)
+  FileName = DocumentActiveWorkbook(wshsh, Checkin)
   If Not FileName = "" Then
     FilesToAdd = " """ & FileName & """"
   End If
@@ -82,7 +82,7 @@ Public Sub CheckinCode(Optional Checkin As Boolean)
     End If
   Next c
   
-  If Not FilesToCheckout = "" Then
+  If Checkin And Not FilesToCheckout = "" Then
     Debug.Print FilesToCheckout
     wshsh.Run "tf.bat checkout" & FilesToCheckout, WshNormalFocus, True
   End If
@@ -94,7 +94,7 @@ Public Sub CheckinCode(Optional Checkin As Boolean)
     VBProj.VBComponents(ChangedFiles.Keys(c)).Export ChangedFiles.Items(c)
   Next c
   
-  If Not FilesToAdd = "" Then
+  If Checkin And Not FilesToAdd = "" Then
     wshsh.Run "tf.bat add" & FilesToAdd, WshNormalFocus, True
   End If
   
@@ -213,7 +213,7 @@ Dim codePath    As String
     Shell "cscript " & codePath, vbNormalFocus
 
 End Sub
-Public Function DocumentActiveWorkbook(wshsh As WshShell) As String
+Public Function DocumentActiveWorkbook(wshsh As WshShell, Checkin As Boolean) As String
 Dim wb As Workbook, ws As Worksheet, nm As Name, lo As listobject, cell As Range
 Dim TStream  As TextStream
 Dim FSO      As New Scripting.FileSystemObject
@@ -225,7 +225,9 @@ Dim FileName As String
     If wb Is Nothing Then Exit Function
     
     FileName = wb.FullName & ".txt"
-    wshsh.Run "tf.bat checkout " & FileName, WshNormalFocus, True
+    If Checkin Then
+        wshsh.Run "tf.bat checkout " & FileName, WshNormalFocus, True
+    End If
 
     Set TStream = FSO.OpenTextFile(FileName, ForWriting, True)
     
