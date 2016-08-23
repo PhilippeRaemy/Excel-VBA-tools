@@ -2,10 +2,10 @@ Attribute VB_Name = "BendingHelpers"
 Option Explicit
 
 Public Function GetWord(s As String, w As Integer) As String
-Dim a As Variant
-    a = Split(s, "/")
+Dim A As Variant
+    A = Split(s, "/")
     Dim specChars As String: specChars = "-,;()"
-    GetWord = a(w - 1)
+    GetWord = A(w - 1)
     
     Dim i As Integer
     For i = 1 To Len(specChars)

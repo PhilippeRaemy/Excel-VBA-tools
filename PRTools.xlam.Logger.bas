@@ -52,10 +52,10 @@ Public Property Get LogFileName()
 End Property
 
 Public Sub error(Msg As String, ParamArray Parms() As Variant)
-  logmsg Msg, Parms
+    logmsg Msg, Parms
 End Sub
 Public Sub log(Msg As String, ParamArray Parms() As Variant)
-  logmsg Msg, Parms
+    logmsg Msg, Parms
 End Sub
 Private Sub logmsg(Msg As String, ParamArray Parms() As Variant)
     lErrHelpContext = Err.HelpContext

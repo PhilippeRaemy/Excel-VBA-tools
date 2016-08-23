@@ -36,21 +36,21 @@ Private Sub myOlItems_ItemAdd(ByVal item As Object)
 
 On Error GoTo ErrorHandler
 
-  Dim Msg As Outlook.MailItem
+    Dim Msg As Outlook.MailItem
 
-  If TypeName(item) = "MailItem" Then
-    Set Msg = item
+    If TypeName(item) = "MailItem" Then
+        Set Msg = item
 
-    MsgBox Msg.Subject
-    MsgBox Msg.Body
+        MsgBox Msg.Subject
+        MsgBox Msg.Body
 
-  End If
+    End If
 
 ProgramExit:
-  Exit Sub
+    Exit Sub
 ErrorHandler:
-  MsgBox Err.Number & " - " & Err.Description
-  Resume ProgramExit
+    MsgBox Err.Number & " - " & Err.Description
+    Resume ProgramExit
 End Sub
 
 

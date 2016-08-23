@@ -3,7 +3,7 @@ Option Explicit
 
 
 Function FormatString(Format As String, ParamArray args() As Variant)
-    Dim a As Integer, arguments As Variant
+    Dim A As Integer, arguments As Variant
     arguments = args
     If UBound(arguments) - LBound(arguments) >= 0 Then
         If IsArray(arguments(LBound(arguments))) Then
@@ -11,65 +11,65 @@ Function FormatString(Format As String, ParamArray args() As Variant)
         End If
     End If
     FormatString = Format
-    For a = LBound(arguments) To UBound(arguments)
-        FormatString = Replace(FormatString, "{" & a & "}", arguments(a))
-    Next a
+    For A = LBound(arguments) To UBound(arguments)
+        FormatString = Replace(FormatString, "{" & A & "}", arguments(A))
+    Next A
     FormatString = Replace(Replace(FormatString, "\t", vbTab), "\n", vbCrLf)
 End Function
 
 Function isEmptyOrBlank(s As Variant) As Boolean
-  If IsEmpty(s) Then
-    isEmptyOrBlank = True
-  ElseIf IsObject(s) Then
-    If s Is Nothing Then isEmptyOrBlank = True
-  ElseIf Trim(CStr(s)) = "" Then
-    isEmptyOrBlank = True
-  End If
+    If IsEmpty(s) Then
+        isEmptyOrBlank = True
+    ElseIf IsObject(s) Then
+        If s Is Nothing Then isEmptyOrBlank = True
+    ElseIf Trim(CStr(s)) = "" Then
+        isEmptyOrBlank = True
+    End If
 End Function
 Function isEmptyOrBlankOrZero(s As Variant) As Boolean
-  If IsEmpty(s) Then
-    isEmptyOrBlankOrZero = True
-  ElseIf IsObject(s) Then
-    If s Is Nothing Then isEmptyOrBlankOrZero = True
-  ElseIf Trim(CStr(s)) = "" Then
-    isEmptyOrBlankOrZero = True
-  ElseIf Trim(CStr(s)) = "0" Then
-    isEmptyOrBlankOrZero = True
-  End If
+    If IsEmpty(s) Then
+        isEmptyOrBlankOrZero = True
+    ElseIf IsObject(s) Then
+        If s Is Nothing Then isEmptyOrBlankOrZero = True
+    ElseIf Trim(CStr(s)) = "" Then
+        isEmptyOrBlankOrZero = True
+    ElseIf Trim(CStr(s)) = "0" Then
+        isEmptyOrBlankOrZero = True
+    End If
 End Function
 
 Public Function GetFormula(r As Range) As String
-  GetFormula = r.Formula
+    GetFormula = r.Formula
 End Function
 
 Public Function GetRangeName(r As Range) As String
 
 On Error Resume Next
 Proc:
-  Dim n As Name
-  For Each n In Application.Names
-    'Debug.Print n.name,
-    'Debug.Print n.RefersToRange.Worksheet.name,
-    'Debug.Print n.RefersToRange.Address,
-    If n.RefersToRange.Address = r.Address _
-    And n.RefersToRange.Worksheet.Name = r.Worksheet.Name Then
-      If Err.Number = 0 Then
-        GetRangeName = n.Name
-        Exit Function
-      Else
-        'Debug.Print Err.Description
-        Err.Clear
-      End If
-    End If
-    Debug.Print
-  Next n
+    Dim n As Name
+    For Each n In Application.Names
+        'Debug.Print n.name,
+        'Debug.Print n.RefersToRange.Worksheet.name,
+        'Debug.Print n.RefersToRange.Address,
+        If n.RefersToRange.Address = r.Address _
+        And n.RefersToRange.Worksheet.Name = r.Worksheet.Name Then
+            If Err.Number = 0 Then
+                GetRangeName = n.Name
+                Exit Function
+            Else
+                'Debug.Print Err.Description
+                Err.Clear
+            End If
+        End If
+        Debug.Print
+    Next n
 End Function
 
-Public Function Min(a As Long, b As Long) As Long
-  If a < b Then Min = a Else Min = b
+Public Function Min(A As Long, b As Long) As Long
+    If A < b Then Min = A Else Min = b
 End Function
-Public Function Max(a As Long, b As Long) As Long
-  If a > b Then Max = a Else Max = b
+Public Function Max(A As Long, b As Long) As Long
+    If A > b Then Max = A Else Max = b
 End Function
 
 Public Function SplitStringH(s As String, delimiter As String) As Variant

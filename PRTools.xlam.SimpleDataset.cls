@@ -199,17 +199,17 @@ Proc:
         End Select
       Case Else: Exit Sub
     End Select
-    Dim a As Variant, i As Integer, ia As Integer
+    Dim A As Variant, i As Integer, ia As Integer
     cRecord = UBound(mValues) + 1
     ReDim Preserve mValues(cRecord)
     ReDim Preserve mFlags(cRecord)
-    a = Array()
-    ReDim a(toIndex - fromIndex)
+    A = Array()
+    ReDim A(toIndex - fromIndex)
     For i = fromIndex To toIndex
       ia = i - fromIndex
-      a(ia) = NewmValues(i)
+      A(ia) = NewmValues(i)
     Next i
-    mValues(cRecord) = a
+    mValues(cRecord) = A
   End If
 End Sub
 Public Sub ApplyToListObject(rng As listobject)
@@ -242,16 +242,16 @@ Proc:
   Next r
   Set Filter = Me
 End Function
-Private Function AreEquals(a As Variant, b As Variant) As Boolean
-  If IsObject(a) And IsObject(b) Then
-    AreEquals = (a Is b)
-  ElseIf IsDate(a) And IsDate(b) Then
-    AreEquals = (CDate(a) = CDate(b))
-  ElseIf IsNumeric(a) And IsNumeric(b) Then
-    AreEquals = (CDbl(a) = CDbl(b))
+Private Function AreEquals(A As Variant, b As Variant) As Boolean
+  If IsObject(A) And IsObject(b) Then
+    AreEquals = (A Is b)
+  ElseIf IsDate(A) And IsDate(b) Then
+    AreEquals = (CDate(A) = CDate(b))
+  ElseIf IsNumeric(A) And IsNumeric(b) Then
+    AreEquals = (CDbl(A) = CDbl(b))
   Else
     On Error Resume Next
-    AreEquals = (CStr(a) = CStr(b))
+    AreEquals = (CStr(A) = CStr(b))
   End If
 End Function
 
@@ -448,7 +448,7 @@ Err_Proc:
   Resume
   Exit Function
 Proc:
-Dim r As Integer, c As Integer, a() As Variant
+Dim r As Integer, c As Integer, A() As Variant
   If Not IsArray(i) Then Exit Function
   If UBound(i) = -1 Then Exit Function
   If Not IsArray(i(LBound(i))) Then
@@ -456,28 +456,28 @@ Dim r As Integer, c As Integer, a() As Variant
   ElseIf Width = -1 Then
     Width = UBound(i(LBound(i)))
   End If
-  ReDim a(LBound(i) To UBound(i), Width)
+  ReDim A(LBound(i) To UBound(i), Width)
   For r = LBound(i) To UBound(i)
     For c = 0 To Width
       If IsArray(i(r)) Then
         If c <= UBound(i(r)) Then
-          a(r, c) = i(r)(c)
+          A(r, c) = i(r)(c)
         End If
       Else
-        a(r, c) = i(r)
+        A(r, c) = i(r)
       End If
     Next c
   Next r
-  Make2DArray = a
+  Make2DArray = A
 End Function
-Private Function Dimensions(a As Variant) As Integer
+Private Function Dimensions(A As Variant) As Integer
   Dim D As Integer
   Dimensions = 0
   On Error GoTo EndFunction
-  While True: D = UBound(a, Dimensions + 1): Dimensions = Dimensions + 1: Wend
+  While True: D = UBound(A, Dimensions + 1): Dimensions = Dimensions + 1: Wend
 EndFunction:
 End Function
-Private Function MakeArrayOfArray(a As Variant) As Variant
+Private Function MakeArrayOfArray(A As Variant) As Variant
 On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
@@ -489,20 +489,20 @@ Proc:
 
 Dim r As Variant, c As Variant, i As Integer, j As Integer
   r = Array()
-  Select Case Dimensions(a)
+  Select Case Dimensions(A)
     Case 0: ' ignore
     Case 1:
-      ReDim r(LBound(a) To UBound(a))
-      For i = LBound(a) To UBound(a)
-        r(i) = Array(a(i))
+      ReDim r(LBound(A) To UBound(A))
+      For i = LBound(A) To UBound(A)
+        r(i) = Array(A(i))
       Next i
     Case Is >= 2:
-      ReDim r(LBound(a, 1) To UBound(a, 1))
-      For i = LBound(a, 1) To UBound(a, 1)
+      ReDim r(LBound(A, 1) To UBound(A, 1))
+      For i = LBound(A, 1) To UBound(A, 1)
         c = Array()
-        ReDim c(LBound(a, 2) To UBound(a, 2))
-        For j = LBound(a, 2) To UBound(a, 2)
-          c(j) = a(i, j)
+        ReDim c(LBound(A, 2) To UBound(A, 2))
+        For j = LBound(A, 2) To UBound(A, 2)
+          c(j) = A(i, j)
         Next j
         r(i) = c
       Next i
@@ -519,16 +519,16 @@ Err_Proc:
   Resume
 Proc:
   If Not rng Is Nothing Then rng.Clear
-  Dim a As Variant
-  a = Make2DArray(i)
-  If IsEmpty(a) Then Exit Sub
+  Dim A As Variant
+  A = Make2DArray(i)
+  If IsEmpty(A) Then Exit Sub
   Dim targetRng As Range
   If Not overflow Then
     Set targetRng = rng
   Else
-    Set targetRng = rng.parent.Range(rng.Cells(1, 1), rng.Cells(UBound(a, 1) + 1, UBound(a, 2) + 1))
+    Set targetRng = rng.parent.Range(rng.Cells(1, 1), rng.Cells(UBound(A, 1) + 1, UBound(A, 2) + 1))
   End If
-  targetRng.Value = a
+  targetRng.Value = A
 End Sub
 
 Private Sub ApplyArrayToListObject(hdr As Variant, data As Variant, lo As listobject, Optional resize As Boolean = False)

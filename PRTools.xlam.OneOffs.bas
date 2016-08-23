@@ -27,11 +27,11 @@ ReDim Preserve mkt(UBound(mkt) + 1): mkt(UBound(mkt)) = "zeebrugge"
 Dim mk, sh As Worksheet
 
 For Each mk In mkt
-  Set sh = ActiveWorkbook.Sheets.Add()
-  sh.Name = Left(mk, 31)
-  Helpers.CreateODBCQuery _
-    "DECLARE @AsofDate DATETIME=dbo.LastWeekDay(getdate()-7) exec GetSeriesValue @AsofDateFrom=@AsofDate, @AsofGranularityDay=1, @PeriodGranularityDay=1, @orderby='2,1 DESC',  @csvtags ='PROVIDER:MDE,SRC:HEREN,OBTYPE:MID,MKT:" & mk & "'" _
-    , CStr(mk)
+    Set sh = ActiveWorkbook.Sheets.Add()
+    sh.Name = Left(mk, 31)
+    Helpers.CreateODBCQuery _
+        "DECLARE @AsofDate DATETIME=dbo.LastWeekDay(getdate()-7) exec GetSeriesValue @AsofDateFrom=@AsofDate, @AsofGranularityDay=1, @PeriodGranularityDay=1, @orderby='2,1 DESC',    @csvtags ='PROVIDER:MDE,SRC:HEREN,OBTYPE:MID,MKT:" & mk & "'" _
+        , CStr(mk)
 Next mk
 End Sub
 

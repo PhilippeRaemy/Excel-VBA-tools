@@ -3,41 +3,41 @@ Attribute VB_Name = "Helpers"
 ' \\GVA0MS01\RAEMYP\Excel\Copy of PRTools.xlsm.Helpers.bas
 ' ####################
 Sub CreateODBCQuery(sql As String, tag As String)
-  With sh.ListObjects.Add _
-      (SourceType:=0 _
-      , source:=Array( _
-          "OLEDB;Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=True;Data Source=kstlon0db003;Use Procedure for Prepare=1;" _
-        , "Auto Translate=True;Packet Size=4096;Use Encryption for Data=False;Tag with column collation when possible=" _
-        , "False;Initial Catalog=TimeSeries") _
-      , Destination:=Range("$A$2") _
-      ).QueryTable
-      .CommandType = xlCmdSql
-      .CommandText = Array(sql)
-      .RowNumbers = False
-      .FillAdjacentFormulas = False
-      .PreserveFormatting = True
-      .RefreshOnFileOpen = False
-      .BackgroundQuery = True
-      .RefreshStyle = xlInsertDeleteCells
-      .SavePassword = False
-      .SaveData = True
-      .AdjustColumnWidth = True
-      .RefreshPeriod = 0
-      .PreserveColumnInfo = True
-      .listobject.DisplayName = "Table_ExternalData_" & tag
-      .Refresh BackgroundQuery:=False
+    With sh.ListObjects.Add _
+        (SourceType:=0 _
+        , source:=Array( _
+            "OLEDB;Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=True;Data Source=kstlon0db003;Use Procedure for Prepare=1;" _
+          , "Auto Translate=True;Packet Size=4096;Use Encryption for Data=False;Tag with column collation when possible=" _
+          , "False;Initial Catalog=TimeSeries") _
+        , Destination:=Range("$A$2") _
+        ).QueryTable
+        .CommandType = xlCmdSql
+        .CommandText = Array(sql)
+        .RowNumbers = False
+        .FillAdjacentFormulas = False
+        .PreserveFormatting = True
+        .RefreshOnFileOpen = False
+        .BackgroundQuery = True
+        .RefreshStyle = xlInsertDeleteCells
+        .SavePassword = False
+        .SaveData = True
+        .AdjustColumnWidth = True
+        .RefreshPeriod = 0
+        .PreserveColumnInfo = True
+        .listobject.DisplayName = "Table_ExternalData_" & tag
+        .Refresh BackgroundQuery:=False
     End With
 End Sub
 
 
 Sub ListQueries()
-  Dim qry As WorkbookConnection
-  For Each qry In ActiveWorkbook.Connections
-    Debug.Print qry.Name,
-    On Error Resume Next
-    Debug.Print qry.OLEDBConnection.CommandText;
-    Debug.Print
-  Next qry
+    Dim qry As WorkbookConnection
+    For Each qry In ActiveWorkbook.Connections
+        Debug.Print qry.Name,
+        On Error Resume Next
+        Debug.Print qry.OLEDBConnection.CommandText;
+        Debug.Print
+    Next qry
 End Sub
 
 Function MakeRange(ParamArray ranges() As Variant) As Range
@@ -90,21 +90,21 @@ Dim cell As Range
     MakeSelectExpression = Left(MakeSelectExpression, Len(MakeSelectExpression) - 1)
 End Function
 Function MakeSqlLiteral(v As Variant) As String
-  If IsNumeric(v) Then
-    MakeSqlLiteral = "'" & CStr(v) & "'"
-  ElseIf CStr(v) Like "(SELECT *)" Then
-    MakeSqlLiteral = CStr(v)
-  Else
-    MakeSqlLiteral = "'" & Replace(CStr(v), "'", "''") & "'"
-  End If
+    If IsNumeric(v) Then
+        MakeSqlLiteral = "'" & CStr(v) & "'"
+    ElseIf CStr(v) Like "(SELECT *)" Then
+        MakeSqlLiteral = CStr(v)
+    Else
+        MakeSqlLiteral = "'" & Replace(CStr(v), "'", "''") & "'"
+    End If
 End Function
 
 Function Join(Sep As String, rng As Range) As String
 Dim cell As Range
-  For Each cell In rng
-    If Join <> "" Then Join = Join & Sep
-    Join = Join & cell.Value
-  Next cell
+    For Each cell In rng
+        If Join <> "" Then Join = Join & Sep
+        Join = Join & cell.Value
+    Next cell
 End Function
 
 
@@ -119,36 +119,36 @@ Sub BubbleSort(arr)
   For i = lngMin To lngMax - 1
     For j = i + 1 To lngMax
       If arr(i)(0) > arr(j)(0) Then
-        swap = arr(i)
-        arr(i) = arr(j)
-        arr(j) = swap
-      End If
-    Next j
-  Next i
+                swap = arr(i)
+                arr(i) = arr(j)
+                arr(j) = swap
+            End If
+        Next j
+    Next i
 End Sub
 Public Sub QuickSort(arr, lo As Long, Hi As Long)
-  Dim varPivot As Variant
-  Dim varTmp As Variant
-  Dim tmpLow As Long
-  Dim tmpHi As Long
-  tmpLow = lo
-  tmpHi = Hi
-  varPivot = arr((lo + Hi) \ 2)(0)
-  Do While tmpLow <= tmpHi
-    Do While arr(tmpLow)(0) < varPivot And tmpLow < Hi
-      tmpLow = tmpLow + 1
+    Dim varPivot As Variant
+    Dim varTmp As Variant
+    Dim tmpLow As Long
+    Dim tmpHi As Long
+    tmpLow = lo
+    tmpHi = Hi
+    varPivot = arr((lo + Hi) \ 2)(0)
+    Do While tmpLow <= tmpHi
+        Do While arr(tmpLow)(0) < varPivot And tmpLow < Hi
+            tmpLow = tmpLow + 1
+        Loop
+        Do While varPivot < arr(tmpHi)(0) And tmpHi > lo
+            tmpHi = tmpHi - 1
+        Loop
+        If tmpLow <= tmpHi Then
+            varTmp = arr(tmpLow)
+            arr(tmpLow) = arr(tmpHi)
+            arr(tmpHi) = varTmp
+            tmpLow = tmpLow + 1
+            tmpHi = tmpHi - 1
+        End If
     Loop
-    Do While varPivot < arr(tmpHi)(0) And tmpHi > lo
-      tmpHi = tmpHi - 1
-    Loop
-    If tmpLow <= tmpHi Then
-      varTmp = arr(tmpLow)
-      arr(tmpLow) = arr(tmpHi)
-      arr(tmpHi) = varTmp
-      tmpLow = tmpLow + 1
-      tmpHi = tmpHi - 1
-    End If
-  Loop
-  If lo < tmpHi Then QuickSort arr, lo, tmpHi
-  If tmpLow < Hi Then QuickSort arr, tmpLow, Hi
+    If lo < tmpHi Then QuickSort arr, lo, tmpHi
+    If tmpLow < Hi Then QuickSort arr, tmpLow, Hi
 End Sub
