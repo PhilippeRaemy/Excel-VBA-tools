@@ -18,7 +18,7 @@ End Sub
 Sub setListObjectSize(table As listobject, Optional Width As Integer = -1, Optional height As Integer = -1)
   Dim r As Range: Set r = table.Range
   Select Case Width
-    Case Is < 0: Width = r.Columns.Count
+    Case Is < 0: Width = r.columns.Count
     Case Is < 1: Width = 1
   End Select
   Select Case height
@@ -99,9 +99,9 @@ End Function
 
 Public Function ToStringArray(rng As Range) As Variant
   Dim cell As Range, i As Integer, a() As String
-  ReDim a(rng.Rows.Count * rng.Columns.Count - 1)
+  ReDim a(rng.Rows.Count * rng.columns.Count - 1)
   For Each cell In rng
-    a(i) = CStr(cell.value)
+    a(i) = CStr(cell.Value)
     i = i + 1
   Next cell
   ToStringArray = a
@@ -110,7 +110,7 @@ End Function
 Public Function RangeRelation(r1 As Range, r2 As Range) As EnumRangeRelation
 Dim hRelation As String
 Dim vRelation As String
-  hRelation = IntervalRelation(r1.Column, r1.Column + r1.Columns.Count, r2.Column, r2.Column + r2.Columns.Count)
+  hRelation = IntervalRelation(r1.Column, r1.Column + r1.columns.Count, r2.Column, r2.Column + r2.columns.Count)
   vRelation = IntervalRelation(r1.row, r1.row + r1.Rows.Count, r2.row, r2.row + r2.Rows.Count)
   If hRelation = vRelation Then
     RangeRelation = vRelation
@@ -135,7 +135,7 @@ End Function
 
 Public Function CountDistinct(r As Range) As Integer
 Dim a As Variant, D As Dictionary, v As Variant
-    a = r.value
+    a = r.Value
     Set D = New Dictionary
     For Each v In a
         If Not D.Exists(v) Then

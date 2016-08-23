@@ -49,22 +49,22 @@ Dim rng As Range, i As Integer, addr As String
     Set MakeRange = Range(Left(addr, Len(addr) - 1))
 End Function
 
-Function MakeInsert(TableName As String, Columns As Variant, Values As Variant, Optional union As String) As String
+Function MakeInsert(tablename As String, columns As Variant, Values As Variant, Optional union As String) As String
 Dim cell As Range, ValueExpression As String, i As Integer, colNames() As String
-    If Not Columns.Cells.Count = Values.Cells.Count Then
+    If Not columns.Cells.Count = Values.Cells.Count Then
         MakeInsert = "columns and values do not match"
         Exit Function
     End If
     If union = "" Then
-        MakeInsert = "INSERT INTO [" & TableName & "]("
+        MakeInsert = "INSERT INTO [" & tablename & "]("
     Else
-        ReDim colNames(Columns.Cells.Count - 1)
+        ReDim colNames(columns.Cells.Count - 1)
     End If
-    For Each cell In Columns.Cells
+    For Each cell In columns.Cells
         If union = "" Then
-            MakeInsert = MakeInsert & "[" & cell.value & "], "
+            MakeInsert = MakeInsert & "[" & cell.Value & "], "
         Else
-            colNames(i) = "[" & cell.value & "]="
+            colNames(i) = "[" & cell.Value & "]="
             i = i + 1
         End If
     Next cell
@@ -74,7 +74,7 @@ Dim cell As Range, ValueExpression As String, i As Integer, colNames() As String
             ValueExpression = ValueExpression & colNames(i)
             i = i + 1
         End If
-        ValueExpression = ValueExpression & MakeSqlLiteral(cell.value) & ","
+        ValueExpression = ValueExpression & MakeSqlLiteral(cell.Value) & ","
     Next cell
     If union = "" Then
         MakeInsert = Left(MakeInsert, Len(MakeInsert) - 2) & ") SELECT " & Left(ValueExpression, Len(ValueExpression) - 1)
@@ -85,7 +85,7 @@ End Function
 Function MakeSelectExpression(Values As Range) As String
 Dim cell As Range
     For Each cell In Values.Cells
-        MakeSelectExpression = MakeSelectExpression & MakeSqlLiteral(cell.value) & ","
+        MakeSelectExpression = MakeSelectExpression & MakeSqlLiteral(cell.Value) & ","
     Next cell
     MakeSelectExpression = Left(MakeSelectExpression, Len(MakeSelectExpression) - 1)
 End Function
@@ -103,7 +103,7 @@ Function Join(Sep As String, rng As Range) As String
 Dim cell As Range
   For Each cell In rng
     If Join <> "" Then Join = Join & Sep
-    Join = Join & cell.value
+    Join = Join & cell.Value
   Next cell
 End Function
 

@@ -42,14 +42,14 @@ On Error Resume Next
  On Error GoTo 0
 End Function
 
-Public Sub WriteRegistryValue(ByVal path As String, ByVal value As Variant, Optional ByVal DataType As RegistryDataType)
+Public Sub WriteRegistryValue(ByVal path As String, ByVal Value As Variant, Optional ByVal DataType As RegistryDataType)
 Dim WshShell As New WshShell
 Dim DataTypeName As String
     DataTypeName = RegistryDataTypeToString(DataType)
     If DataTypeName = "" Then
-        WshShell.RegWrite path, value
+        WshShell.RegWrite path, Value
     Else
-        WshShell.RegWrite path, value, DataTypeName
+        WshShell.RegWrite path, Value, DataTypeName
     End If
 End Sub
 

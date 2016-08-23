@@ -11,10 +11,10 @@ Public Sub test(r As Integer, g As Integer, b As Integer)
     Dim c As Range, Col As HtmlColor
     Set c = selection.Cells(1, 1)
     c.Interior.Color = RGB(r, g, b)
-    c.value = "RGB(" & r & ", " & g & ", " & b & ")"
+    c.Value = "RGB(" & r & ", " & g & ", " & b & ")"
     Set c = selection.Cells(1, 2)
     Set Col = Rgb2Color(RGB(r, g, b))
-    c.value = Col.ToString()
+    c.Value = Col.ToString()
     c.Interior.Color = RGB(Col.Red, Col.Green, Col.Blue)
 End Sub
 

@@ -13,7 +13,7 @@ Public Function DumpNode(node As IXMLDOMNode, Optional indent As String = "") As
   DumpNode = indent & "<" & node.BaseName
   If Not node.Attributes Is Nothing Then
     For Each attr In node.Attributes
-      DumpNode = DumpNode & " " & attr.BaseName & " = """ & attr.value & """"
+      DumpNode = DumpNode & " " & attr.BaseName & " = """ & attr.Value & """"
     Next attr
   End If
   DumpNode = DumpNode & ">"
@@ -72,7 +72,7 @@ Dim child As IXMLDOMNode
     parent.appendChild nodes.FirstChild
   Next child
 End Sub
-Public Function UpSertNode(parent As MSXML2.IXMLDOMNode, NodeName As String, value As String) As IXMLDOMNode
+Public Function UpSertNode(parent As MSXML2.IXMLDOMNode, NodeName As String, Value As String) As IXMLDOMNode
   Dim node As IXMLDOMNode
   Dim root As New MSXML2.DOMDocument
   For Each node In parent.ChildNodes
@@ -85,13 +85,13 @@ Public Function UpSertNode(parent As MSXML2.IXMLDOMNode, NodeName As String, val
     Set UpSertNode = OwnerDocument(parent).CreateElement(NodeName)
     parent.appendChild UpSertNode
   End If
-  UpSertNode.Text = value
+  UpSertNode.Text = Value
 End Function
 
-Public Sub setNodeText(parent As IXMLDOMNode, xPathSelector As String, value As String)
+Public Sub setNodeText(parent As IXMLDOMNode, xPathSelector As String, Value As String)
   Dim node As IXMLDOMNode
   For Each node In parent.SelectNodes(xPathSelector)
-    node.Text = value
+    node.Text = Value
   Next node
 End Sub
 Private Function OwnerDocument(node As IXMLDOMNode) As DOMDocument
@@ -112,7 +112,7 @@ End Function
 
 Public Function SetAttribute(node As IXMLDOMNode, AttributeName As String, AttributeValue As String) As IXMLDOMAttribute
   Set SetAttribute = OwnerDocument(node).createAttribute(AttributeName)
-  SetAttribute.value = AttributeValue
+  SetAttribute.Value = AttributeValue
   node.Attributes.setNamedItem SetAttribute
 End Function
 

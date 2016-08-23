@@ -67,7 +67,7 @@ Proc:
   mFields = FieldNames
   Exit Sub
 End Sub
-Public Property Get value(FieldIdOrName As Variant) As Variant
+Public Property Get Value(FieldIdOrName As Variant) As Variant
 On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
@@ -76,9 +76,9 @@ Err_Proc:
   Resume
   Exit Sub
 Proc:
-  value = mValues(cRecord)(FieldId(FieldIdOrName))
+  Value = mValues(cRecord)(FieldId(FieldIdOrName))
 End Property
-Public Property Let value(FieldIdOrName As Variant, pValue As Variant)
+Public Property Let Value(FieldIdOrName As Variant, pValue As Variant)
 On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
@@ -120,20 +120,20 @@ Err_Proc:
   Exit Sub
 Proc:
   Dim Col As Variant: Col = ColumnValue(FieldIdOrName)
-  Dim c As Variant, r As Integer, rr As Integer, found As Boolean, value As Variant
+  Dim c As Variant, r As Integer, rr As Integer, found As Boolean, Value As Variant
   c = Array()
   For r = LBound(mValues) To UBound(mValues)
     found = False
-    value = Col(r)
+    Value = Col(r)
     For rr = LBound(c) To UBound(c)
-      If c(rr) = value Then
+      If c(rr) = Value Then
         found = True
         Exit For
       End If
     Next rr
     If Not found Then
       ReDim Preserve c(UBound(c) + 1)
-      c(UBound(c)) = value
+      c(UBound(c)) = Value
     End If
   Next r
   DistinctColumnValue = c
@@ -368,9 +368,9 @@ Err_Proc:
   Exit Sub
 Proc:
   Class_Initialize
-  mFields = MakeArrayOfArray(lo.HeaderRowRange.value)(1)
+  mFields = MakeArrayOfArray(lo.HeaderRowRange.Value)(1)
   If Not lo.DataBodyRange Is Nothing Then
-    mValues = MakeArrayOfArray(lo.DataBodyRange.value)
+    mValues = MakeArrayOfArray(lo.DataBodyRange.Value)
     ReDim mFlags(LBound(mValues) To UBound(mValues))
   End If
 End Sub
@@ -528,7 +528,7 @@ Proc:
   Else
     Set targetRng = rng.parent.Range(rng.Cells(1, 1), rng.Cells(UBound(a, 1) + 1, UBound(a, 2) + 1))
   End If
-  targetRng.value = a
+  targetRng.Value = a
 End Sub
 
 Private Sub ApplyArrayToListObject(hdr As Variant, data As Variant, lo As listobject, Optional resize As Boolean = False)
@@ -547,7 +547,7 @@ Proc:
   If UBound(data) < 0 Then Exit Sub
   
   ApplyArrayToRange data, IIf(lo.DataBodyRange Is Nothing, lo.InsertRowRange, lo.DataBodyRange), resize
-  lo.HeaderRowRange.value = hdr
+  lo.HeaderRowRange.Value = hdr
 End Sub
 
 

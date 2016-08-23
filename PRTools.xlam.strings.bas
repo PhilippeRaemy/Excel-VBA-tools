@@ -88,4 +88,16 @@ Public Function SplitStringV(s As String, delimiter As String) As Variant
     
 End Function
 
+Public Function MReplace(OldText As String, Searches As Range, Replaces As Range, Optional Compare As VbCompareMethod = VbCompareMethod.vbTextCompare)
+    Dim sc As Integer, sr As Integer
+    Dim rc As Integer, rr As Integer
+    sc = 1: sr = 1: rc = 1: rr = 1
+    MReplace = OldText
+    Do
+        MReplace = Replace(MReplace, Searches.Cells(sr, sc).Value, Replaces.Cells(rr, rc).Value, Compare)
+        sc = sc + 1: If sc > Searches.columns.Count Then sc = 1: sr = sr + 1: If sr > Searches.Rows.Count Then Exit Function
+        rc = rc + 1: If rc > Replaces.columns.Count Then rc = 1: rr = rr + 1: If rr > Replaces.Rows.Count Then Exit Function
+    Loop
+End Function
+
 

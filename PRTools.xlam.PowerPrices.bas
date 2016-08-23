@@ -19,9 +19,9 @@ Const OUTFILENAME = "c:\temp\Gundies_CXL_RECOVERY_20150227_000000.csv"
     
     Set ts = FSO.OpenTextFile(OUTFILENAME, ForAppending, True)
     Set lastCell = ActiveCell.SpecialCells(xlLastCell)
-    Dates = ActiveSheet.Range("f1", ActiveSheet.Cells(1, lastCell.Column)).value
-    Series = ActiveSheet.Range("e2", ActiveSheet.Cells(lastCell.row, 5)).value
-    Values = ActiveSheet.Range("f2", lastCell).value
+    Dates = ActiveSheet.Range("f1", ActiveSheet.Cells(1, lastCell.Column)).Value
+    Series = ActiveSheet.Range("e2", ActiveSheet.Cells(lastCell.row, 5)).Value
+    Values = ActiveSheet.Range("f2", lastCell).Value
     ReDim SeriesNames(LBound(Values, 1) To UBound(Values, 1))
     ReDim Observations(LBound(Values, 1) To UBound(Values, 1))
     For r = LBound(Values, 1) To UBound(Values, 1)

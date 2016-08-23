@@ -31,11 +31,13 @@ Public Sub CheckinCode(Optional Checkin As Boolean)
   
   Dim wshsh As WshShell: Set wshsh = New WshShell
   
+  FileName = DocumentActiveWorkbook(wshsh)
+  If Not FileName = "" Then
+    FilesToAdd = " """ & FileName & """"
+  End If
+  
   Set wb = Application.ActiveWorkbook
   If Not wb Is Nothing Then
-    FileName = wb.FullName & ".txt"
-    wshsh.Run "tf.bat checkout """ & FileName & """", WshNormalFocus, True
-    DocumentActiveWorkbook FileName
     Set VBProj = wb.VBProject
   Else
     Set VBProj = Application.VBE.ActiveVBProject
@@ -105,7 +107,7 @@ Public Sub CheckinCode(Optional Checkin As Boolean)
     cmd = cmd & "tf.bat checkin  """ & FSO.GetFile(FileName).ParentFolder.path & "\*"""
     cmd = cmd & " & tf.bat checkout """ & FileName & """"
     cmd = cmd & " & timeout 1"
-    cmd = cmd & " & ""c:\Program Files (x86)\Microsoft Office\Office14\EXCEL.EXE"" """ & FileName & """"
+    cmd = cmd & " & ""C:\Program Files\Microsoft Office 15\root\office15\EXCEL.EXE"" /x """ & FileName & """"
     wshsh.Run cmd, WshNormalFocus, False
     Application.Quit
   End If
@@ -211,27 +213,40 @@ Dim codePath    As String
     Shell "cscript " & codePath, vbNormalFocus
 
 End Sub
-Public Function DocumentActiveWorkbook(FileName As String) As String
+Public Function DocumentActiveWorkbook(wshsh As WshShell) As String
 Dim wb As Workbook, ws As Worksheet, nm As Name, lo As listobject, cell As Range
 Dim TStream  As TextStream
 Dim FSO      As New Scripting.FileSystemObject
+Dim FileName As String
 
-On Error Resume Next
+' On Error Resume Next
 
     Set wb = ActiveWorkbook
     If wb Is Nothing Then Exit Function
     
+    FileName = wb.FullName & ".txt"
+    wshsh.Run "tf.bat checkout " & FileName, WshNormalFocus, True
+
     Set TStream = FSO.OpenTextFile(FileName, ForWriting, True)
     
     If wb Is Nothing Then Exit Function
     TStream.WriteLine strings.FormatString("Workbook :\t{0}", wb.Name)
     For Each nm In wb.Names
-        TStream.WriteLine strings.FormatString("Workbook Named Range :\t{0}\t{1}!{2}", nm.Name, nm.RefersToRange.Worksheet.Name, nm.RefersToRange.Address)
+        If InStr(CStr(nm), "#") > 0 Then
+            TStream.WriteLine strings.FormatString("Workbook Named Range :\t{0}\t{1}", nm.Name, CStr(nm))
+        Else
+            TStream.WriteLine strings.FormatString("Workbook Named Range :\t{0}\t{1}!{2}", nm.Name, nm.RefersToRange.Worksheet.Name, nm.RefersToRange.Address)
+        End If
+        On Error GoTo 0
     Next nm
     For Each ws In wb.Worksheets
         TStream.WriteLine strings.FormatString("Worksheet :\t{0}", ws.Name)
         For Each nm In ws.Names
-            TStream.WriteLine strings.FormatString("Worksheet Named Range :\t{0}\t{1}!{2}", nm.Name, nm.RefersToRange.Worksheet.Name, nm.RefersToRange.Address)
+            If InStr(CStr(nm), "#") > 0 Then
+                TStream.WriteLine strings.FormatString("Worksheet Named Range :\t{0}\t{1}", nm.Name, CStr(nm))
+            Else
+                TStream.WriteLine strings.FormatString("Worksheet Named Range :\t{0}\t{1}!{2}", nm.Name, nm.RefersToRange.Worksheet.Name, nm.RefersToRange.Address)
+            End If
         Next nm
         For Each lo In ws.ListObjects
             TStream.WriteLine strings.FormatString("Worksheet List object :\t{0}\t{1}!{2}", lo.Name, lo.Range.Worksheet.Name, lo.Range.Address)
