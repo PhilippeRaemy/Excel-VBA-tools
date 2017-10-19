@@ -8,14 +8,14 @@ Private Greens As Scripting.Dictionary
 Private Blues As Scripting.Dictionary
 
 Public Sub test(r As Integer, g As Integer, b As Integer)
-    Dim c As Range, Col As HtmlColor
+    Dim c As Range, COl As HtmlColor
     Set c = selection.Cells(1, 1)
     c.Interior.Color = RGB(r, g, b)
     c.Value = "RGB(" & r & ", " & g & ", " & b & ")"
     Set c = selection.Cells(1, 2)
-    Set Col = Rgb2Color(RGB(r, g, b))
-    c.Value = Col.ToString()
-    c.Interior.Color = RGB(Col.Red, Col.Green, Col.Blue)
+    Set COl = Rgb2Color(RGB(r, g, b))
+    c.Value = COl.ToString()
+    c.Interior.Color = RGB(COl.Red, COl.Green, COl.Blue)
 End Sub
 
 Public Sub ttest(rr As Integer, gg As Integer, bb As Integer, stp As Integer)
@@ -42,34 +42,34 @@ Private Function Rgb2ColorRaw(ByVal RGB As Long) As HtmlColor
 End Function
 
 Public Function GetRGB(ByVal ColorName As String) As Long
-    Dim Col As HtmlColor
+    Dim COl As HtmlColor
     Init
     If ColorRef.Exists(ColorName) Then
-        Set Col = ColorRef(ColorName)
-        GetRGB = RGB(Col.Red, Col.Green, Col.Blue)
+        Set COl = ColorRef(ColorName)
+        GetRGB = RGB(COl.Red, COl.Green, COl.Blue)
     Else
         GetRGB = RGB(128, 128, 128)
     End If
 End Function
 Private Function Rgb2Color(ByVal RGB As Long) As HtmlColor
-    Dim Searched As HtmlColor, Col As Variant
+    Dim Searched As HtmlColor, COl As Variant
     Dim Closest As Long, Distance As Long
     Init
     Set Searched = Rgb2ColorRaw(RGB)
     Closest = -1
-    For Each Col In ColorRef.Items
-        Distance = (Col.Red - Searched.Red) ^ 2 _
-                + (Col.Green - Searched.Green) ^ 2 _
-                + (Col.Blue - Searched.Blue) ^ 2
+    For Each COl In ColorRef.Items
+        Distance = (COl.Red - Searched.Red) ^ 2 _
+                + (COl.Green - Searched.Green) ^ 2 _
+                + (COl.Blue - Searched.Blue) ^ 2
         ' Debug.Print Distance, Closest, Col.ToString(),
         If Closest > Distance Or Closest < 0 Then
             Closest = Distance
-            Set Rgb2Color = Col
+            Set Rgb2Color = COl
             ' Debug.Print "Closest",
             If Closest = 0 Then Exit Function ' found exact!
         End If
         ' Debug.Print
-    Next Col
+    Next COl
     
 End Function
 Public Function Rgb2ColorName(ByVal RGB As Long) As String
@@ -79,13 +79,13 @@ End Function
 
 
 Private Sub AddColor(ByVal Name As String, ByVal Red As Integer, ByVal Green As Integer, ByVal Blue As Integer)
-    Dim Col As HtmlColor
-    Set Col = New HtmlColor
-    Col.Name = Name
-    Col.Red = Red
-    Col.Green = Green
-    Col.Blue = Blue
-    ColorRef.Add Name, Col
+    Dim COl As HtmlColor
+    Set COl = New HtmlColor
+    COl.Name = Name
+    COl.Red = Red
+    COl.Green = Green
+    COl.Blue = Blue
+    ColorRef.Add Name, COl
 End Sub
 
 Private Sub Init()

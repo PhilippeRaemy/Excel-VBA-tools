@@ -3,7 +3,7 @@ Option Explicit
 
 
 Function FormatString(Format As String, ParamArray args() As Variant)
-    Dim A As Integer, arguments As Variant
+    Dim a As Integer, arguments As Variant
     arguments = args
     If UBound(arguments) - LBound(arguments) >= 0 Then
         If IsArray(arguments(LBound(arguments))) Then
@@ -11,9 +11,9 @@ Function FormatString(Format As String, ParamArray args() As Variant)
         End If
     End If
     FormatString = Format
-    For A = LBound(arguments) To UBound(arguments)
-        FormatString = Replace(FormatString, "{" & A & "}", arguments(A))
-    Next A
+    For a = LBound(arguments) To UBound(arguments)
+        FormatString = Replace(FormatString, "{" & a & "}", arguments(a))
+    Next a
     FormatString = Replace(Replace(FormatString, "\t", vbTab), "\n", vbCrLf)
 End Function
 
@@ -65,11 +65,11 @@ Proc:
     Next n
 End Function
 
-Public Function Min(A As Long, b As Long) As Long
-    If A < b Then Min = A Else Min = b
+Public Function Min(a As Long, b As Long) As Long
+    If a < b Then Min = a Else Min = b
 End Function
-Public Function Max(A As Long, b As Long) As Long
-    If A > b Then Max = A Else Max = b
+Public Function Max(a As Long, b As Long) As Long
+    If a > b Then Max = a Else Max = b
 End Function
 
 Public Function SplitStringH(s As String, delimiter As String) As Variant

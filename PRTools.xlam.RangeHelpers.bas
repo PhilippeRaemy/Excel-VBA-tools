@@ -28,14 +28,14 @@ Sub setListObjectSize(table As listobject, Optional Width As Integer = -1, Optio
     table.resize Range(r.Cells(1, 1), r.Cells(height + 1, Width))
 End Sub
 
-Function SplitAll(A As Variant, delimiter As String) As Variant
+Function SplitAll(a As Variant, delimiter As String) As Variant
     Dim r As Variant, s As Variant, E As Variant, i As Integer, ii As Integer
-    If Not IsArray(A) Then
-        SplitAll = Split(CStr(A), delimiter)
+    If Not IsArray(a) Then
+        SplitAll = Split(CStr(a), delimiter)
         Exit Function
     End If
     r = Array()
-    For Each E In A
+    For Each E In a
         s = Split(CStr(E), delimiter)
         ReDim Preserve r(UBound(r) + UBound(s) + 1)
         For ii = 0 To UBound(s)
@@ -98,20 +98,20 @@ Public Function GetColumnsOrdinalDictionary(rng As Range, ParamArray ColumnNames
 End Function
 
 Public Function ToStringArray(rng As Range) As Variant
-    Dim cell As Range, i As Integer, A() As String
-    ReDim A(rng.Rows.Count * rng.columns.Count - 1)
+    Dim cell As Range, i As Integer, a() As String
+    ReDim a(rng.Rows.Count * rng.columns.Count - 1)
     For Each cell In rng
-        A(i) = CStr(cell.Value)
+        a(i) = CStr(cell.Value)
         i = i + 1
     Next cell
-    ToStringArray = A
+    ToStringArray = a
 End Function
 
 Public Function RangeRelation(r1 As Range, r2 As Range) As EnumRangeRelation
 Dim hRelation As String
 Dim vRelation As String
     hRelation = IntervalRelation(r1.Column, r1.Column + r1.columns.Count, r2.Column, r2.Column + r2.columns.Count)
-    vRelation = IntervalRelation(r1.row, r1.row + r1.Rows.Count, r2.row, r2.row + r2.Rows.Count)
+    vRelation = IntervalRelation(r1.Row, r1.Row + r1.Rows.Count, r2.Row, r2.Row + r2.Rows.Count)
     If hRelation = vRelation Then
         RangeRelation = vRelation
     Else
@@ -134,10 +134,10 @@ Private Function IntervalRelation(x1 As Long, x2 As Long, y1 As Long, y2 As Long
 End Function
 
 Public Function CountDistinct(r As Range) As Integer
-Dim A As Variant, D As Dictionary, v As Variant
-    A = r.Value
+Dim a As Variant, D As Dictionary, v As Variant
+    a = r.Value
     Set D = New Dictionary
-    For Each v In A
+    For Each v In a
         If Not D.Exists(v) Then
             CountDistinct = CountDistinct + 1
             D.Add v, Empty

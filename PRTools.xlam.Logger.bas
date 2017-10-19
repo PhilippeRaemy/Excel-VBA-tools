@@ -66,7 +66,7 @@ Private Sub logmsg(Msg As String, ParamArray Parms() As Variant)
     lErrDescription = Err.Description
     
     If Not Logger.Logging Then Exit Sub
-    Dim p As Variant, FileName As String
+    Dim p As Variant, filename As String
     p = Parms
     If UBound(Parms) >= 0 Then
         If IsArray(Parms(0)) Then
@@ -77,11 +77,11 @@ Private Sub logmsg(Msg As String, ParamArray Parms() As Variant)
     For i = 0 To UBound(p)
          Msg = Replace(Msg, "{" & i & "}", CStr(p(i)))
     Next i
-    FileName = LogFileName
+    filename = LogFileName
     Debug.Print Msg
     If FSO Is Nothing Then Set FSO = New FileSystemObject
     
-    Set ts = FSO.OpenTextFile(FileName, ForAppending, True)
+    Set ts = FSO.OpenTextFile(filename, ForAppending, True)
     ts.Write Format(Now, "yyyymmdd hhmmss")
     ts.Write " - "
     ts.WriteLine Msg

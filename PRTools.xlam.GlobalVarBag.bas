@@ -4,7 +4,7 @@ Private Bag As Scripting.Dictionary
 
 Public Function Deposit(ByVal var As Variant) As String
     GlobalVarBag.Init
-    Deposit = Mid(CreateObject("Scriptlet.TypeLib").GUID, 2, 36)
+    Deposit = Mid(CreateObject("Scriptlet.TypeLib").guid, 2, 36)
     If IsObject(var) Then
         Set Bag(Deposit) = var
     Else

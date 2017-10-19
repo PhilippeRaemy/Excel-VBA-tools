@@ -1,5 +1,6 @@
 Attribute VB_Name = "VB_ObjectModel"
 Option Explicit
+Const SevenZip = """C:\Program Files\7-Zip\7z.exe"""
 
 Public Sub ExportCode()
     CheckinCode Checkin:=False
@@ -24,20 +25,12 @@ Public Sub CheckinCode(Optional Checkin As Boolean)
     Dim FilesToAdd As String
     
     Dim FSO As FileSystemObject: Set FSO = New FileSystemObject
-    Dim FileName As String, filenameTfs As String
+    Dim filename As String, filenameTfs As String
     Dim ts As Scripting.TextStream
     Dim code As String, oldcode As String
     Dim fileStatus As String
     
     Dim wshsh As WshShell: Set wshsh = New WshShell
-    
-    FileName = DocumentActiveWorkbook(wshsh, Checkin)
-    If Not FileName = "" Then
-        FilesToAdd = " """ & FileName & """"
-    End If
-    If Not FileName = "" Then
-        FilesToAdd = " """ & FileName & """"
-    End If
     
     Set wb = Application.ActiveWorkbook
     If Not wb Is Nothing Then
@@ -45,30 +38,30 @@ Public Sub CheckinCode(Optional Checkin As Boolean)
     Else
         Set VBProj = Application.VBE.ActiveVBProject
     End If
-    Debug.Print VBProj.FileName
+    Debug.Print VBProj.filename
     Dim TempFileNameRoot As String: TempFileNameRoot = "f" & Format(Now, "yyyymmdd_hhmmss")
     Dim TempFileName As String: TempFileName = Environ("tmp") & "\" & TempFileNameRoot & ".tmp"
     For c = 1 To VBProj.VBComponents.Count
         Dim Comp As Variant ' VbComponent
         Set Comp = VBProj.VBComponents(c)
-        FileName = VBProj.FileName & "." & Comp.Name & Extension(Comp.Type)
-        filenameTfs = VBProj.FileName & "." & Comp.Name & ".*"
+        filename = VBProj.filename & "." & Comp.Name & Extension(Comp.Type)
+        filenameTfs = VBProj.filename & "." & Comp.Name & ".*"
         If FSO.FileExists(TempFileName) Then FSO.DeleteFile (TempFileName)
         Comp.Export TempFileName
         Set ts = FSO.OpenTextFile(TempFileName)
         code = ts.ReadAll
         ts.Close
         fileStatus = "New"
-        If FSO.FileExists(FileName) Then
-            Set ts = FSO.OpenTextFile(FileName)
-            oldcode = Replace(ts.ReadAll, Mid(FSO.GetFileName(FileName), 1, Len(FSO.GetFileName(FileName)) - Len(FSO.GetExtensionName(FileName)) - 1), TempFileNameRoot)
+        If FSO.FileExists(filename) Then
+            Set ts = FSO.OpenTextFile(filename)
+            oldcode = Replace(ts.ReadAll, Mid(FSO.GetFileName(filename), 1, Len(FSO.GetFileName(filename)) - Len(FSO.GetExtensionName(filename)) - 1), TempFileNameRoot)
             ts.Close
             If oldcode = code Then
                 fileStatus = "Same"
             Else
                 fileStatus = "Changed"
                 Debug.Print " file "; Comp.Name; " has changed";
-                If (FSO.GetFile(FileName).Attributes And ReadOnly) = ReadOnly Then
+                If (FSO.GetFile(filename).Attributes And ReadOnly) = ReadOnly Then
                     ' possibly checked in TFS: try to checkout
                     FilesToCheckout = FilesToCheckout & " """ & filenameTfs & """"
                     Debug.Print " and will be checked-out";
@@ -77,7 +70,7 @@ Public Sub CheckinCode(Optional Checkin As Boolean)
             End If
         End If
         If Not fileStatus = "Same" Then
-            ChangedFiles.Add Comp.Name, FileName
+            ChangedFiles.Add Comp.Name, filename
         End If
         If fileStatus = "New" Then
             Debug.Print " file "; Comp.Name; " is new."
@@ -92,7 +85,7 @@ Public Sub CheckinCode(Optional Checkin As Boolean)
     
     For c = 0 To ChangedFiles.Count - 1
         If FSO.FileExists(ChangedFiles.Items(c)) Then
-            FSO.DeleteFile VBProj.FileName & "." & ChangedFiles.Keys(c) & ".*"
+            FSO.DeleteFile VBProj.filename & "." & ChangedFiles.Keys(c) & ".*"
         End If
         VBProj.VBComponents(ChangedFiles.Keys(c)).Export ChangedFiles.Items(c)
     Next c
@@ -101,22 +94,30 @@ Public Sub CheckinCode(Optional Checkin As Boolean)
         wshsh.Run "tf.bat add" & FilesToAdd, WshNormalFocus, True
     End If
     
+    
+    Dim cmd As CmdBatch: Set cmd = New CmdBatch
+    If Not ActiveWorkbook Is Nothing Then
+        Dim UnzippedFolder As String: UnzippedFolder = """" & ActiveWorkbook.FullName & ".unzipped"""
+        cmd.AddCmd "rd /s /q " & UnzippedFolder
+        cmd.AddCmd SevenZip & " x -r -y """ & ActiveWorkbook.FullName & """ * -o" & UnzippedFolder
+    End If
     If Checkin And Not wb Is Nothing Then
-        FileName = wb.VBProject.FileName
+        filename = wb.VBProject.filename
         wb.Save
         wb.Close True
-        Dim cmd As String
-        cmd = "cmd.exe /c "
-        cmd = cmd & "tf.bat checkin    """ & FSO.GetFile(FileName).ParentFolder.path & "\*"""
-        cmd = cmd & " & tf.bat checkout """ & FileName & """"
-        cmd = cmd & " & timeout 1"
-        cmd = cmd & " & ""C:\Program Files\Microsoft Office 15\root\office15\EXCEL.EXE"" /x """ & FileName & """"
-        wshsh.Run cmd, WshNormalFocus, False
+        cmd.AddCmd "tf.bat checkin  """ & FSO.GetFile(filename).ParentFolder.path & "\*"""
+        cmd.AddCmd "tf.bat checkout """ & filename & """"
+    End If
+    If cmd.CmdLine <> "" Then
+        If Not ActiveWorkbook Is Nothing Then
+            cmd.AddRestartWorkbook ActiveWorkbook.FullName
+            ActiveWorkbook.Close
+        End If
+        cmd.Run
         Application.Quit
     End If
     
 End Sub
-
 
 ' ==============================================================
 ' * Please note that Microsoft provides programming examples
@@ -220,7 +221,7 @@ Public Function DocumentActiveWorkbook(wshsh As WshShell, Checkin As Boolean) As
 Dim wb As Workbook, ws As Worksheet, nm As Name, lo As listobject, cell As Range
 Dim TStream    As TextStream
 Dim FSO        As New Scripting.FileSystemObject
-Dim FileName As String
+Dim filename As String
 Dim fCond    As FormatCondition
 Dim vfCond     As Variant
 
@@ -229,12 +230,12 @@ Dim vfCond     As Variant
     Set wb = ActiveWorkbook
     If wb Is Nothing Then Exit Function
     
-    FileName = wb.FullName & ".txt"
+    filename = wb.FullName & ".txt"
     If Checkin Then
-        wshsh.Run "tf.bat checkout " & FileName, WshNormalFocus, True
+        wshsh.Run "tf.bat checkout " & filename, WshNormalFocus, True
     End If
 
-    Set TStream = FSO.OpenTextFile(FileName, ForWriting, True)
+    Set TStream = FSO.OpenTextFile(filename, ForWriting, True)
     
     If wb Is Nothing Then Exit Function
     TStream.WriteLine strings.FormatString("Workbook :\t{0}", wb.Name)
@@ -268,7 +269,7 @@ Dim vfCond     As Variant
         Next cell
     Next ws
     TStream.Close
-    DocumentActiveWorkbook = FileName
+    DocumentActiveWorkbook = filename
 
 End Function
 

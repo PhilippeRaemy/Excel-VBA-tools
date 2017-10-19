@@ -119,12 +119,12 @@ Err_Proc:
   Resume
   Exit Sub
 Proc:
-  Dim Col As Variant: Col = ColumnValue(FieldIdOrName)
+  Dim COl As Variant: COl = ColumnValue(FieldIdOrName)
   Dim c As Variant, r As Integer, rr As Integer, found As Boolean, Value As Variant
   c = Array()
   For r = LBound(mValues) To UBound(mValues)
     found = False
-    Value = Col(r)
+    Value = COl(r)
     For rr = LBound(c) To UBound(c)
       If c(rr) = Value Then
         found = True
@@ -199,17 +199,17 @@ Proc:
         End Select
       Case Else: Exit Sub
     End Select
-    Dim A As Variant, i As Integer, ia As Integer
+    Dim a As Variant, i As Integer, ia As Integer
     cRecord = UBound(mValues) + 1
     ReDim Preserve mValues(cRecord)
     ReDim Preserve mFlags(cRecord)
-    A = Array()
-    ReDim A(toIndex - fromIndex)
+    a = Array()
+    ReDim a(toIndex - fromIndex)
     For i = fromIndex To toIndex
       ia = i - fromIndex
-      A(ia) = NewmValues(i)
+      a(ia) = NewmValues(i)
     Next i
-    mValues(cRecord) = A
+    mValues(cRecord) = a
   End If
 End Sub
 Public Sub ApplyToListObject(rng As listobject)
@@ -242,16 +242,16 @@ Proc:
   Next r
   Set Filter = Me
 End Function
-Private Function AreEquals(A As Variant, b As Variant) As Boolean
-  If IsObject(A) And IsObject(b) Then
-    AreEquals = (A Is b)
-  ElseIf IsDate(A) And IsDate(b) Then
-    AreEquals = (CDate(A) = CDate(b))
-  ElseIf IsNumeric(A) And IsNumeric(b) Then
-    AreEquals = (CDbl(A) = CDbl(b))
+Private Function AreEquals(a As Variant, b As Variant) As Boolean
+  If IsObject(a) And IsObject(b) Then
+    AreEquals = (a Is b)
+  ElseIf IsDate(a) And IsDate(b) Then
+    AreEquals = (CDate(a) = CDate(b))
+  ElseIf IsNumeric(a) And IsNumeric(b) Then
+    AreEquals = (CDbl(a) = CDbl(b))
   Else
     On Error Resume Next
-    AreEquals = (CStr(A) = CStr(b))
+    AreEquals = (CStr(a) = CStr(b))
   End If
 End Function
 
@@ -374,12 +374,12 @@ Proc:
     ReDim mFlags(LBound(mValues) To UBound(mValues))
   End If
 End Sub
-Public Sub FromServiceXML(xml As MSXML2.DOMDocument)
+Public Sub FromServiceXML(xml As MSXML2.DOMDocument60)
   Dim xfields As MSXML2.IXMLDOMNodeList
   Dim xfield As MSXML2.IXMLDOMNode
   Dim xrows As MSXML2.IXMLDOMNodeList
   Dim xrow As MSXML2.IXMLDOMNode
-  Dim fi As Integer, row As Integer
+  Dim fi As Integer, Row As Integer
   Dim v As Variant
   Set xfields = xml.SelectNodes("//a:Fields/b:string")
   ReDim Preserve mFields(xfields.Length - 1)
@@ -390,7 +390,7 @@ Public Sub FromServiceXML(xml As MSXML2.DOMDocument)
   Next xfield
   Set xrows = xml.SelectNodes("//a:Values/b:ArrayOfstring")
   ReDim Preserve mValues(xrows.Length - 1)
-  row = 0
+  Row = 0
   For Each xrow In xrows
     fi = 0
     v = Array(): ReDim v(UBound(mFields))
@@ -399,16 +399,16 @@ Public Sub FromServiceXML(xml As MSXML2.DOMDocument)
       v(fi) = xfield.Text
       fi = fi + 1
     Next xfield
-    mValues(row) = v
-    row = row + 1
+    mValues(Row) = v
+    Row = Row + 1
   Next xrow
 End Sub
 
-Public Function Serialize(rootNodeName As String, ParamArray rootNodeAttributes() As Variant) As MSXML2.DOMDocument
-  Dim doc As MSXML2.DOMDocument, root As MSXML2.IXMLDOMNode
+Public Function Serialize(rootNodeName As String, ParamArray rootNodeAttributes() As Variant) As MSXML2.DOMDocument60
+  Dim doc As MSXML2.DOMDocument60, root As MSXML2.IXMLDOMNode
   Dim FieldsNode As MSXML2.IXMLDOMNode, ValuesNode As MSXML2.IXMLDOMNode, RowNode As MSXML2.IXMLDOMNode, ChildNode As MSXML2.IXMLDOMNode
-  Dim fi As Variant, row As Variant
-  Set doc = New MSXML2.DOMDocument
+  Dim fi As Variant, Row As Variant
+  Set doc = New MSXML2.DOMDocument60
   Set root = XMLHelpers.AppendChildElement(doc, rootNodeName)
   Dim rootNodeAttribute As Variant
   For Each rootNodeAttribute In rootNodeAttributes
@@ -423,12 +423,12 @@ Public Function Serialize(rootNodeName As String, ParamArray rootNodeAttributes(
   For Each fi In Me.Fields
     Set ChildNode = XMLHelpers.AppendChildElement(FieldsNode, "b:string", CStr(fi))
   Next fi
-  For Each row In mValues
+  For Each Row In mValues
     Set ChildNode = XMLHelpers.AppendChildElement(ValuesNode, "b:ArrayOfstring")
-    For Each fi In row
+    For Each fi In Row
       XMLHelpers.AppendChildElement ChildNode, "b:string", CStr(fi)
     Next fi
-  Next row
+  Next Row
   Set Serialize = doc
 End Function
 
@@ -448,7 +448,7 @@ Err_Proc:
   Resume
   Exit Function
 Proc:
-Dim r As Integer, c As Integer, A() As Variant
+Dim r As Integer, c As Integer, a() As Variant
   If Not IsArray(i) Then Exit Function
   If UBound(i) = -1 Then Exit Function
   If Not IsArray(i(LBound(i))) Then
@@ -456,28 +456,28 @@ Dim r As Integer, c As Integer, A() As Variant
   ElseIf Width = -1 Then
     Width = UBound(i(LBound(i)))
   End If
-  ReDim A(LBound(i) To UBound(i), Width)
+  ReDim a(LBound(i) To UBound(i), Width)
   For r = LBound(i) To UBound(i)
     For c = 0 To Width
       If IsArray(i(r)) Then
         If c <= UBound(i(r)) Then
-          A(r, c) = i(r)(c)
+          a(r, c) = i(r)(c)
         End If
       Else
-        A(r, c) = i(r)
+        a(r, c) = i(r)
       End If
     Next c
   Next r
-  Make2DArray = A
+  Make2DArray = a
 End Function
-Private Function Dimensions(A As Variant) As Integer
+Private Function Dimensions(a As Variant) As Integer
   Dim D As Integer
   Dimensions = 0
   On Error GoTo EndFunction
-  While True: D = UBound(A, Dimensions + 1): Dimensions = Dimensions + 1: Wend
+  While True: D = UBound(a, Dimensions + 1): Dimensions = Dimensions + 1: Wend
 EndFunction:
 End Function
-Private Function MakeArrayOfArray(A As Variant) As Variant
+Private Function MakeArrayOfArray(a As Variant) As Variant
 On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
@@ -489,20 +489,20 @@ Proc:
 
 Dim r As Variant, c As Variant, i As Integer, j As Integer
   r = Array()
-  Select Case Dimensions(A)
+  Select Case Dimensions(a)
     Case 0: ' ignore
     Case 1:
-      ReDim r(LBound(A) To UBound(A))
-      For i = LBound(A) To UBound(A)
-        r(i) = Array(A(i))
+      ReDim r(LBound(a) To UBound(a))
+      For i = LBound(a) To UBound(a)
+        r(i) = Array(a(i))
       Next i
     Case Is >= 2:
-      ReDim r(LBound(A, 1) To UBound(A, 1))
-      For i = LBound(A, 1) To UBound(A, 1)
+      ReDim r(LBound(a, 1) To UBound(a, 1))
+      For i = LBound(a, 1) To UBound(a, 1)
         c = Array()
-        ReDim c(LBound(A, 2) To UBound(A, 2))
-        For j = LBound(A, 2) To UBound(A, 2)
-          c(j) = A(i, j)
+        ReDim c(LBound(a, 2) To UBound(a, 2))
+        For j = LBound(a, 2) To UBound(a, 2)
+          c(j) = a(i, j)
         Next j
         r(i) = c
       Next i
@@ -519,16 +519,16 @@ Err_Proc:
   Resume
 Proc:
   If Not rng Is Nothing Then rng.Clear
-  Dim A As Variant
-  A = Make2DArray(i)
-  If IsEmpty(A) Then Exit Sub
+  Dim a As Variant
+  a = Make2DArray(i)
+  If IsEmpty(a) Then Exit Sub
   Dim targetRng As Range
   If Not overflow Then
     Set targetRng = rng
   Else
-    Set targetRng = rng.parent.Range(rng.Cells(1, 1), rng.Cells(UBound(A, 1) + 1, UBound(A, 2) + 1))
+    Set targetRng = rng.parent.Range(rng.Cells(1, 1), rng.Cells(UBound(a, 1) + 1, UBound(a, 2) + 1))
   End If
-  targetRng.Value = A
+  targetRng.Value = a
 End Sub
 
 Private Sub ApplyArrayToListObject(hdr As Variant, data As Variant, lo As listobject, Optional resize As Boolean = False)

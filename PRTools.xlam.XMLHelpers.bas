@@ -41,8 +41,8 @@ Public Function DumpNode(node As IXMLDOMNode, Optional indent As String = "") As
   End If
   DumpNode = DumpNode & "</" & node.BaseName & ">" & vbCrLf
 End Function
-Private Function LooseLoadXml(s As String) As DOMDocument
-Dim node As New DOMDocument
+Private Function LooseLoadXml(s As String) As DOMDocument60
+Dim node As New DOMDocument60
   If Not node.LoadXML(s) Then
     If Not node.LoadXML(Replace(s, ">", "/>")) Then
       Err.Raise vbObject, "LooseLoadXML", "Invalid XML stream"
@@ -51,7 +51,7 @@ Dim node As New DOMDocument
   Set LooseLoadXml = node
 End Function
 Public Function GetXMLTagName(s As String)
-Dim node As DOMDocument
+Dim node As DOMDocument60
   Set node = LooseLoadXml(s)
   If Not node Is Nothing Then
     GetXMLTagName = node.FirstChild.NodeName
@@ -59,14 +59,14 @@ Dim node As DOMDocument
 End Function
 
 Public Function GetXMLTagText(s As String)
-Dim node As DOMDocument
+Dim node As DOMDocument60
   Set node = LooseLoadXml(s)
   If Not node Is Nothing Then
     GetXMLTagText = node.FirstChild.Text
   End If
 End Function
 
-Public Sub CreateChildren(root As MSXML2.DOMDocument, parent As MSXML2.IXMLDOMNode, nodes As MSXML2.DOMDocument)
+Public Sub CreateChildren(root As MSXML2.DOMDocument60, parent As MSXML2.IXMLDOMNode, nodes As MSXML2.DOMDocument60)
 Dim child As IXMLDOMNode
   For Each child In nodes.ChildNodes
     parent.appendChild nodes.FirstChild
@@ -74,7 +74,7 @@ Dim child As IXMLDOMNode
 End Sub
 Public Function UpSertNode(parent As MSXML2.IXMLDOMNode, NodeName As String, Value As String) As IXMLDOMNode
   Dim node As IXMLDOMNode
-  Dim root As New MSXML2.DOMDocument
+  Dim root As New MSXML2.DOMDocument60
   For Each node In parent.ChildNodes
     If node.NodeName = NodeName Then
       Set UpSertNode = node
@@ -94,8 +94,8 @@ Public Sub setNodeText(parent As IXMLDOMNode, xPathSelector As String, Value As 
     node.Text = Value
   Next node
 End Sub
-Private Function OwnerDocument(node As IXMLDOMNode) As DOMDocument
-  If TypeName(node) = "DOMDocument" Then
+Private Function OwnerDocument(node As IXMLDOMNode) As DOMDocument60
+  If TypeName(node) = "DOMDocument60" Then
     Set OwnerDocument = node
   Else
     Set OwnerDocument = node.OwnerDocument
@@ -103,7 +103,7 @@ Private Function OwnerDocument(node As IXMLDOMNode) As DOMDocument
 End Function
 
 Public Function AppendChildElement(parent As IXMLDOMNode, ElementName As String, Optional ElementText As String) As IXMLDOMNode
-  Dim doc As MSXML2.DOMDocument
+  Dim doc As MSXML2.DOMDocument60
   Set AppendChildElement = parent.appendChild(OwnerDocument(parent).CreateElement(ElementName))
   If Not isEmptyOrBlank(ElementText) Then
     AppendChildElement.Text = ElementText
@@ -155,7 +155,7 @@ End Function
 
 
 Public Sub testXPath()
-Dim doc As New MSXML2.DOMDocument
+Dim doc As New MSXML2.DOMDocument60
 Dim xml As String
 Dim node As MSXML2.IXMLDOMNode
 xml = "<root>"
