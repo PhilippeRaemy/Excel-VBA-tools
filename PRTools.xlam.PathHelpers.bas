@@ -8,9 +8,9 @@ Dim RootFileName As String: RootFileName = GetFileName(FullName)
 Dim Folder As String: Folder = GetFolderName(FullName)
    
     Application.DisplayAlerts = False
-    ThisWorkbook.SaveAs filename:=Folder & "\Files\" & RootFileName & "." & ".csv", FileFormat:=xlCSV, CreateBackup:=False
-    ThisWorkbook.SaveAs filename:=Folder & "\Back\" & RootFileName & Format(Now, """.""yyyymmdd"".""") & GetFileExt(FullName), FileFormat:=xlCSV, CreateBackup:=False
-    ThisWorkbook.SaveAs filename:=FullName, FileFormat:=xlOpenXMLWorkbookMacroEnabled, CreateBackup:=False
+    ThisWorkbook.SaveAs FileName:=Folder & "\Files\" & RootFileName & "." & ".csv", FileFormat:=xlCSV, CreateBackup:=False
+    ThisWorkbook.SaveAs FileName:=Folder & "\Back\" & RootFileName & Format(Now, """.""yyyymmdd"".""") & GetFileExt(FullName), FileFormat:=xlCSV, CreateBackup:=False
+    ThisWorkbook.SaveAs FileName:=FullName, FileFormat:=xlOpenXMLWorkbookMacroEnabled, CreateBackup:=False
     Application.DisplayAlerts = True
 End Sub
 
@@ -51,6 +51,6 @@ Attribute Macro2.VB_ProcData.VB_Invoke_Func = " \n14"
 '
 
 '
-    ActiveWorkbook.SaveAs filename:= _
+    ActiveWorkbook.SaveAs FileName:= _
         "P:\CurveBuilder\V1\Power\Copy of LTShaping.xlsm", FileFormat:=xlOpenXMLWorkbookMacroEnabled, CreateBackup:=True
 End Sub

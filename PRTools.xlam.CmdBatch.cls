@@ -16,7 +16,7 @@ Public Sub AddCmd(cmd As String)
         batch = batch & " & " & cmd
     End If
 End Sub
-Public Sub AddRestartWorkbook(filename As String)
+Public Sub AddRestartWorkbook(FileName As String)
     AddCmd "timeout 1"
     AddCmd """C:\Program Files\Microsoft Office\root\office16\EXCEL.EXE"" /x """ & ActiveWorkbook.FullName & """"
 End Sub
