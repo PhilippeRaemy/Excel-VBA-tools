@@ -1,20 +1,23 @@
 Attribute VB_Name = "BendingHelpers"
 Option Explicit
 
-Public Function GetWord(s As String, w As Integer) As String
+Public Function GetSpecialWord(s As String, w As Integer) As String
 Dim a As Variant
     a = Split(s, "/")
     Dim specChars As String: specChars = "-,;()"
-    GetWord = a(w - 1)
+    GetSpecialWord = a(w - 1)
     
     Dim i As Integer
     For i = 1 To Len(specChars)
-        GetWord = Replace(GetWord, Mid(specChars, i, 1), " ")
+        GetSpecialWord = Replace(GetSpecialWord, Mid(specChars, i, 1), " ")
     Next i
-    While InStr(GetWord, "  ") > 0
-        GetWord = Replace(GetWord, "  ", " ")
+    While InStr(GetSpecialWord, "  ") > 0
+        GetSpecialWord = Replace(GetSpecialWord, "  ", " ")
     Wend
-    GetWord = Replace(Trim(GetWord), " ", "_")
+    GetSpecialWord = Replace(Trim(GetSpecialWord), " ", "_")
 End Function
 
+Public Function JoinString(Separator As String, ParamArray words() As Variant) As String
+    JoinString = VBA.Join("_", words)
+End Function
 

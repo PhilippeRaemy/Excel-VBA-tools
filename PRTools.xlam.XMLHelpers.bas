@@ -27,17 +27,17 @@ Public Function DumpNode(node As IXMLDOMNode, Optional indent As String = "") As
   For c = LBound(children) To UBound(children)
     Set child = children(c)(1)
     If child.BaseName = "" Then
-      nodeText = child.Text
+      nodeText = child.text
     Else
       ChildDumps = ChildDumps & DumpNode(child, indent & "  ")
     End If
   Next c
   If ChildDumps <> "" And nodeText <> "" Then
-    DumpNode = DumpNode & vbCrLf & indent & node.Text & vbCrLf & ChildDumps & vbCrLf
+    DumpNode = DumpNode & vbCrLf & indent & node.text & vbCrLf & ChildDumps & vbCrLf
   ElseIf ChildDumps <> "" Then
     DumpNode = DumpNode & vbCrLf & ChildDumps & indent
   Else
-    DumpNode = DumpNode & node.Text
+    DumpNode = DumpNode & node.text
   End If
   DumpNode = DumpNode & "</" & node.BaseName & ">" & vbCrLf
 End Function
@@ -62,7 +62,7 @@ Public Function GetXMLTagText(s As String)
 Dim node As DOMDocument60
   Set node = LooseLoadXml(s)
   If Not node Is Nothing Then
-    GetXMLTagText = node.FirstChild.Text
+    GetXMLTagText = node.FirstChild.text
   End If
 End Function
 
@@ -85,13 +85,13 @@ Public Function UpSertNode(parent As MSXML2.IXMLDOMNode, NodeName As String, Val
     Set UpSertNode = OwnerDocument(parent).CreateElement(NodeName)
     parent.appendChild UpSertNode
   End If
-  UpSertNode.Text = Value
+  UpSertNode.text = Value
 End Function
 
 Public Sub setNodeText(parent As IXMLDOMNode, xPathSelector As String, Value As String)
   Dim node As IXMLDOMNode
   For Each node In parent.SelectNodes(xPathSelector)
-    node.Text = Value
+    node.text = Value
   Next node
 End Sub
 Private Function OwnerDocument(node As IXMLDOMNode) As DOMDocument60
@@ -106,7 +106,7 @@ Public Function AppendChildElement(parent As IXMLDOMNode, ElementName As String,
   Dim doc As MSXML2.DOMDocument60
   Set AppendChildElement = parent.appendChild(OwnerDocument(parent).CreateElement(ElementName))
   If Not isEmptyOrBlank(ElementText) Then
-    AppendChildElement.Text = ElementText
+    AppendChildElement.text = ElementText
   End If
 End Function
 
@@ -119,34 +119,34 @@ End Function
 Public Function GetNodeAttributeText(node As IXMLDOMNode, AttributeName As String, Optional default As String) As String
   GetNodeAttributeText = default
   On Error Resume Next
-  GetNodeAttributeText = node.Attributes.getNamedItem(AttributeName).Text
+  GetNodeAttributeText = node.Attributes.getNamedItem(AttributeName).text
   If Trim(GetNodeAttributeText) = "" Then GetNodeAttributeText = default
 End Function
 Public Function GetNodeAttributeDbl(node As IXMLDOMNode, AttributeName As String, Optional default As Double) As Double
   GetNodeAttributeDbl = default
   On Error Resume Next
-  GetNodeAttributeDbl = CDbl(node.Attributes.getNamedItem(AttributeName).Text)
+  GetNodeAttributeDbl = CDbl(node.Attributes.getNamedItem(AttributeName).text)
 End Function
 Public Function GetNodeAttributeDate(node As IXMLDOMNode, AttributeName As String, Optional default As Date) As Date
   GetNodeAttributeDate = default
   On Error Resume Next
-  GetNodeAttributeDate = cIsoDate(node.Attributes.getNamedItem(AttributeName).Text)
+  GetNodeAttributeDate = cIsoDate(node.Attributes.getNamedItem(AttributeName).text)
 End Function
 Public Function GetNodeChildText(node As IXMLDOMNode, xPathSelector As String, Optional default As String) As String
   GetNodeChildText = default
   On Error Resume Next
-  GetNodeChildText = node.SelectSingleNode(xPathSelector).Text
+  GetNodeChildText = node.SelectSingleNode(xPathSelector).text
   If Trim(GetNodeChildText) = "" Then GetNodeChildText = default
 End Function
 Public Function GetNodeChildDbl(node As IXMLDOMNode, xPathSelector As String, Optional default As Double) As Double
   GetNodeChildDbl = default
   On Error Resume Next
-  GetNodeChildDbl = CDbl(node.SelectSingleNode(xPathSelector).Text)
+  GetNodeChildDbl = CDbl(node.SelectSingleNode(xPathSelector).text)
 End Function
 Public Function GetNodeChildDate(node As IXMLDOMNode, xPathSelector As String, Optional default As Date) As Date
   GetNodeChildDate = default
   On Error Resume Next
-  GetNodeChildDate = cIsoDate(node.SelectSingleNode(xPathSelector).Text)
+  GetNodeChildDate = cIsoDate(node.SelectSingleNode(xPathSelector).text)
 End Function
 Private Function cIsoDate(tIsoDate As String) As Date
   On Error Resume Next
@@ -171,8 +171,8 @@ xml = xml & "</root>"
 
 doc.LoadXML xml
 For Each node In doc.SelectNodes("/root/node[key='c']"): Debug.Print node.xml: Next node
-For Each node In doc.SelectNodes("/root/node[key='c']"): Debug.Print node.SelectSingleNode("value").Text: Next node
-For Each node In doc.SelectNodes("//node[key='c']"): Debug.Print node.SelectSingleNode(".//value").Text: Next node
+For Each node In doc.SelectNodes("/root/node[key='c']"): Debug.Print node.SelectSingleNode("value").text: Next node
+For Each node In doc.SelectNodes("//node[key='c']"): Debug.Print node.SelectSingleNode(".//value").text: Next node
 
 End Sub
 

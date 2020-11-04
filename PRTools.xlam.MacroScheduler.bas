@@ -13,18 +13,19 @@ Private Sub Init()
     ReDim Schedules(10)
 End Sub
 Private Sub CleanUp()
+    If Not Inited Then Init
     Dim i As Integer
     For i = LBound(Schedules) To UBound(Schedules)
-        If Schedules(i).ScheduleTime < Now Then Schedules(i).Active = False
+        If Schedules(i).ScheduleTime < Now - 5 / 86400 Then Schedules(i).Active = False
     Next i
 End Sub
-Private Function AddSchedule(EarliestTime As Date, Procedure As String) As Sched
+Private Function AddSchedule(EarliestTime As Date, Procedure As String) As Integer
     Dim i As Integer, s As Sched
     Dim foundASpot As Boolean
     While Not foundASpot
         For i = LBound(Schedules) To UBound(Schedules): s = Schedules(i)
             If Not s.Active Then
-                AddSchedule = s
+                AddSchedule = i
                 foundASpot = True
                 Exit For
             End If
@@ -36,14 +37,16 @@ Private Function AddSchedule(EarliestTime As Date, Procedure As String) As Sched
     Schedules(i).ScheduleTime = EarliestTime
     Schedules(i).Procedure = Procedure
     Schedules(i).Active = True
-    AddSchedule = Schedules(i)
+    AddSchedule = i
 End Function
+
 Public Function Schedule(EarliestTime As Date, Procedure As String, Optional LatestTime As Variant) As Boolean
+    Dim ScheduleNumber As Integer
     If Not Inited Then Init
-    CleanUp
-    AddSchedule EarliestTime, Procedure
+    ' CleanUp
+    ScheduleNumber = AddSchedule(EarliestTime, Procedure)
     Application.OnTime EarliestTime, Procedure, LatestTime
-    Debug.Print "Scheduled " & Procedure & " for " & VBA.Format(EarliestTime, "hh:mm:ss")
+    Debug.Print "Scheduled " & Procedure & " for " & VBA.Format(EarliestTime, "hh:mm:ss") & " as schedule #" & ScheduleNumber
     Schedule = True
 End Function
 
@@ -57,6 +60,7 @@ End Sub
 
 Private Sub CancelImpl(Procedure As String)
     Dim i As Integer, s As Sched
+    If Not Inited Then Init
     For i = LBound(Schedules) To UBound(Schedules): s = Schedules(i)
         If s.Active _
         And (Procedure = "" Or s.Procedure = Procedure) _
@@ -71,3 +75,12 @@ Private Sub CancelImpl(Procedure As String)
         End If
     Next i
 End Sub
+
+Public Function ListSchedules() As String
+Dim i As Integer, s As Sched
+    If Not Inited Then Init
+    For i = LBound(Schedules) To UBound(Schedules): s = Schedules(i)
+        ListSchedules = ListSchedules & i & ") `" & s.Procedure & "` (" & IIf(s.Active, "", "in") & "active) scheduled at " & VBA.Format(s.ScheduleTime, "hh:mm:ss") & vbCrLf
+    Next i
+End Function
+

@@ -89,7 +89,7 @@ Private Sub testcolumnsname()
 End Sub
 Public Function GetColumnsOrdinalDictionary(rng As Range, ParamArray ColumnNames() As Variant)
     Dim colName As Variant
-    Dim dic As Scripting.Dictionary: Set dic = New Scripting.Dictionary
+    Dim dic As scripting.Dictionary: Set dic = New scripting.Dictionary
     
     For Each colName In ColumnNames
         dic(colName) = Application.WorksheetFunction.Match(colName, rng, False)
@@ -110,7 +110,7 @@ End Function
 Public Function RangeRelation(r1 As Range, r2 As Range) As EnumRangeRelation
 Dim hRelation As String
 Dim vRelation As String
-    hRelation = IntervalRelation(r1.Column, r1.Column + r1.columns.Count, r2.Column, r2.Column + r2.columns.Count)
+    hRelation = IntervalRelation(r1.column, r1.column + r1.columns.Count, r2.column, r2.column + r2.columns.Count)
     vRelation = IntervalRelation(r1.Row, r1.Row + r1.Rows.Count, r2.Row, r2.Row + r2.Rows.Count)
     If hRelation = vRelation Then
         RangeRelation = vRelation
@@ -134,13 +134,13 @@ Private Function IntervalRelation(x1 As Long, x2 As Long, y1 As Long, y2 As Long
 End Function
 
 Public Function CountDistinct(r As Range) As Integer
-Dim a As Variant, D As Dictionary, v As Variant
+Dim a As Variant, d As Dictionary, v As Variant
     a = r.Value
-    Set D = New Dictionary
+    Set d = New Dictionary
     For Each v In a
-        If Not D.Exists(v) Then
+        If Not d.Exists(v) Then
             CountDistinct = CountDistinct + 1
-            D.Add v, Empty
+            d.Add v, Empty
         End If
     Next v
 End Function

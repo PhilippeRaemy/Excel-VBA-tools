@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
-Public Text As String
+Public text As String
 Public Max As Integer
 Public BarSize As Integer
 Private mProgress As Integer
@@ -51,8 +51,8 @@ Public Sub Progress(Optional Progress As Integer = -1)
 Dim sb As String
     If Max <= 0 Then Exit Sub
     mProgress = IIf(Progress = -1, mProgress + 1, Progress)
-    If Text <> "" Then
-        sb = Text & Format(mProgress / Max * 100, "00.0") & "% done"
+    If text <> "" Then
+        sb = text & Format(mProgress / Max * 100, "00.0") & "% done"
     End If
     If BarSize <> 0 Then
         Dim sprogress As Single: sprogress = mProgress / Max

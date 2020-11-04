@@ -11,7 +11,7 @@ Public Sub ConnectInbox()
     Dim myOlItems  As Outlook.Items
     Set myOlItems = objNS.GetDefaultFolder(olFolderInbox).Items
     Dim mi As MailItem
-    Dim i As Long, D As Long, v As Long, startTime As Date
+    Dim i As Long, d As Long, v As Long, startTime As Date
     startTime = Now
     For i = myOlItems.Count To 1 Step -1
         ' Debug.Print i, myOlItems(i).Subject
@@ -19,13 +19,13 @@ Public Sub ConnectInbox()
             If TypeName(myOlItems(i)) = "MailItem" Then
                 Set mi = myOlItems(i)
                 mi.Delete
-                D = D + 1
+                d = d + 1
                 ' mi.Delete
             End If
         End If
         v = v + 1
         If v Mod 100 = 0 Then
-            Debug.Print Now, "counter:"; i; " visited:"; v; " deleted:"; D; " vRate:"; Int(v / (Now - startTime) / 24); "/[h]"; " dRate:"; Int(D / (Now - startTime) / 24); "/[h]"
+            Debug.Print Now, "counter:"; i; " visited:"; v; " deleted:"; d; " vRate:"; Int(v / (Now - startTime) / 24); "/[h]"; " dRate:"; Int(d / (Now - startTime) / 24); "/[h]"
         End If
         DoEvents
     Next i

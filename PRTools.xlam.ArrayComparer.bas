@@ -44,7 +44,7 @@ Dim co As Coordinate, v As Variant
     compareResults = ArrayCompare(a, b)
     For i = LBound(compareResults) To UBound(compareResults)
         Set co = compareResults(i)
-        Debug.Print i; ":("; co.Row; ","; co.Column; ")"
+        Debug.Print i; ":("; co.Row; ","; co.column; ")"
     Next i
 End Sub
 

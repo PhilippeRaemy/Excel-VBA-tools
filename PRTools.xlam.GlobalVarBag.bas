@@ -1,6 +1,6 @@
 Attribute VB_Name = "GlobalVarBag"
 Option Explicit
-Private Bag As Scripting.Dictionary
+Private Bag As scripting.Dictionary
 
 Public Function Deposit(ByVal var As Variant) As String
     GlobalVarBag.Init
@@ -49,12 +49,12 @@ End Function
 
 Public Sub Clear()
     If Bag Is Nothing Then
-        Set Bag = New Scripting.Dictionary
+        Set Bag = New scripting.Dictionary
     Else
         Bag.RemoveAll
     End If
 End Sub
 
 Public Sub Init()
-    If Bag Is Nothing Then Set Bag = New Scripting.Dictionary
+    If Bag Is Nothing Then Set Bag = New scripting.Dictionary
 End Sub

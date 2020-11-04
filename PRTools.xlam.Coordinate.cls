@@ -8,11 +8,11 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Public Row As Integer
-Public Column As Integer
+Public column As Integer
 
-Public Function NewCoordinate(ByVal Row As Integer, ByVal Column As Integer) As Coordinate
+Public Function NewCoordinate(ByVal Row As Integer, ByVal column As Integer) As Coordinate
     Set NewCoordinate = New Coordinate
     NewCoordinate.Row = Row
-    NewCoordinate.Column = Column
+    NewCoordinate.column = column
 End Function
 

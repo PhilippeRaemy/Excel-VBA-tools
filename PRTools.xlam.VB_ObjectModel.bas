@@ -12,21 +12,21 @@ Public Sub CheckinCode(Optional Checkin As Boolean)
     Dim c As Integer, l As Integer
     Dim wb As Workbook
     Dim VBProj
-    Dim Extension As Scripting.Dictionary
-    Set Extension = New Scripting.Dictionary
+    Dim Extension As scripting.Dictionary
+    Set Extension = New scripting.Dictionary
     Extension.Add 1, ".bas"
     Extension.Add 2, ".cls"
     Extension.Add 3, ".frm"
     Extension.Add 100, ".ws.bas"
     
-    Dim ChangedFiles As Scripting.Dictionary
-    Set ChangedFiles = New Scripting.Dictionary
+    Dim ChangedFiles As scripting.Dictionary
+    Set ChangedFiles = New scripting.Dictionary
     Dim FilesToCheckout As String
     Dim FilesToAdd As String
     
     Dim FSO As FileSystemObject: Set FSO = New FileSystemObject
     Dim filename As String, filenameTfs As String
-    Dim ts As Scripting.TextStream
+    Dim ts As scripting.TextStream
     Dim code As String, oldcode As String
     Dim fileStatus As String
     
@@ -220,7 +220,7 @@ End Sub
 Public Function DocumentActiveWorkbook(wshsh As WshShell, Checkin As Boolean) As String
 Dim wb As Workbook, ws As Worksheet, nm As Name, lo As listobject, cell As Range
 Dim TStream    As TextStream
-Dim FSO        As New Scripting.FileSystemObject
+Dim FSO        As New scripting.FileSystemObject
 Dim filename As String
 Dim fCond    As FormatCondition
 Dim vfCond     As Variant

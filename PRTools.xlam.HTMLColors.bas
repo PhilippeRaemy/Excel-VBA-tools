@@ -1,18 +1,18 @@
 Attribute VB_Name = "HTMLColors"
 Option Explicit
 
-Private ColorRef As Scripting.Dictionary
+Private ColorRef As scripting.Dictionary
 Private Inited As Boolean
-Private Reds As Scripting.Dictionary
-Private Greens As Scripting.Dictionary
-Private Blues As Scripting.Dictionary
+Private Reds As scripting.Dictionary
+Private Greens As scripting.Dictionary
+Private Blues As scripting.Dictionary
 
 Public Sub test(r As Integer, g As Integer, b As Integer)
     Dim c As Range, COl As HtmlColor
-    Set c = selection.Cells(1, 1)
+    Set c = Selection.Cells(1, 1)
     c.Interior.Color = RGB(r, g, b)
     c.Value = "RGB(" & r & ", " & g & ", " & b & ")"
-    Set c = selection.Cells(1, 2)
+    Set c = Selection.Cells(1, 2)
     Set COl = Rgb2Color(RGB(r, g, b))
     c.Value = COl.ToString()
     c.Interior.Color = RGB(COl.Red, COl.Green, COl.Blue)
@@ -25,7 +25,7 @@ Dim r As Integer, g As Integer, b As Integer
         For g = gg - 10 * stp To gg + 10 * stp Step stp
             For b = bb - 10 * stp To bb + 10 * stp Step stp
                 test r, g, b
-                selection.Cells(2, 1).Select
+                Selection.Cells(2, 1).Select
             Next
         Next
     Next
@@ -90,7 +90,7 @@ End Sub
 
 Private Sub Init()
     If ColorRef Is Nothing Then
-        Set ColorRef = New Scripting.Dictionary
+        Set ColorRef = New scripting.Dictionary
         AddColor "Pink", 255, 192, 203
         AddColor "LightPink", 255, 182, 193
         AddColor "HotPink", 255, 105, 180

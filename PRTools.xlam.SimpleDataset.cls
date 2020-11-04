@@ -138,7 +138,7 @@ Proc:
   Next r
   DistinctColumnValue = c
 End Property
-Public Function RowToDictionary() As Scripting.Dictionary
+Public Function RowToDictionary() As scripting.Dictionary
 On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
@@ -147,8 +147,8 @@ Err_Proc:
   Resume
   Exit Function
 Proc:
-  Dim dic As Scripting.Dictionary
-  Set dic = New Scripting.Dictionary
+  Dim dic As scripting.Dictionary
+  Set dic = New scripting.Dictionary
   Dim i As Integer
   For i = LBound(mFields) To UBound(mFields)
     dic.Add mFields(i), mValues(cRecord)(i)
@@ -385,7 +385,7 @@ Public Sub FromServiceXML(xml As MSXML2.DOMDocument60)
   ReDim Preserve mFields(xfields.Length - 1)
   fi = 0
   For Each xfield In xfields
-    mFields(fi) = xfield.Text
+    mFields(fi) = xfield.text
     fi = fi + 1
   Next xfield
   Set xrows = xml.SelectNodes("//a:Values/b:ArrayOfstring")
@@ -396,7 +396,7 @@ Public Sub FromServiceXML(xml As MSXML2.DOMDocument60)
     v = Array(): ReDim v(UBound(mFields))
     Set xfields = xrow.SelectNodes("b:string")
     For Each xfield In xfields
-      v(fi) = xfield.Text
+      v(fi) = xfield.text
       fi = fi + 1
     Next xfield
     mValues(Row) = v
@@ -471,10 +471,10 @@ Dim r As Integer, c As Integer, a() As Variant
   Make2DArray = a
 End Function
 Private Function Dimensions(a As Variant) As Integer
-  Dim D As Integer
+  Dim d As Integer
   Dimensions = 0
   On Error GoTo EndFunction
-  While True: D = UBound(a, Dimensions + 1): Dimensions = Dimensions + 1: Wend
+  While True: d = UBound(a, Dimensions + 1): Dimensions = Dimensions + 1: Wend
 EndFunction:
 End Function
 Private Function MakeArrayOfArray(a As Variant) As Variant

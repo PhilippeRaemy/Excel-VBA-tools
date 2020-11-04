@@ -1,11 +1,11 @@
 Attribute VB_Name = "ArrayHelpers"
 Function ArrayDim(ByVal v As Variant) As Integer
-Dim D As Integer
+Dim d As Integer
     If Not IsArray(v) Then Exit Function
     On Error GoTo ExitFct:
     
     While True
-        D = UBound(v, ArrayDim + 1)
+        d = UBound(v, ArrayDim + 1)
         ArrayDim = ArrayDim + 1
     Wend
     
@@ -15,7 +15,7 @@ End Function
 
 Function Concat(ByVal V1 As Variant, ByVal V2 As Variant) As Variant
 Dim Ad1 As Integer, Ad2 As Integer
-Dim a As Variant, i As Integer, K As Integer, Ix As Integer
+Dim a As Variant, i As Integer, k As Integer, Ix As Integer
 Ad1 = ArrayDim(V1)
 Ad2 = ArrayDim(V2)
 If Ad1 <> Ad2 Then
@@ -46,8 +46,8 @@ Select Case Ad1
         End If
         a = Array()
         ReDim a(UBound(V1) - LBound(V1) + UBound(V2) - LBound(V2) + 1, LBound(V1, 2) To UBound(V1, 2), LBound(V1, 3) To UBound(V1, 3))
-        For i = LBound(V1, 1) To UBound(V1, 1): For j = LBound(V1, 2) To UBound(V1, 2): For K = LBound(V1, 3) To UBound(V1, 3): a(Ix, j, K) = V1(i, j, K): Ix = Ix + 1: Next K: Next j: Next i
-        For i = LBound(V2, 1) To UBound(V2, 1): For j = LBound(V2, 2) To UBound(V2, 2): For K = LBound(V2, 3) To UBound(V2, 3): a(Ix, j, K) = V2(i, j, K): Ix = Ix + 1: Next K: Next j: Next i
+        For i = LBound(V1, 1) To UBound(V1, 1): For j = LBound(V1, 2) To UBound(V1, 2): For k = LBound(V1, 3) To UBound(V1, 3): a(Ix, j, k) = V1(i, j, k): Ix = Ix + 1: Next k: Next j: Next i
+        For i = LBound(V2, 1) To UBound(V2, 1): For j = LBound(V2, 2) To UBound(V2, 2): For k = LBound(V2, 3) To UBound(V2, 3): a(Ix, j, k) = V2(i, j, k): Ix = Ix + 1: Next k: Next j: Next i
     Case Else
         Err.Raise vbObjectError, "PRTools.Xlam.ArrayHelpers.Concat", "Arrays Of More Than 3 Dimensions Are Not Supported"
 End Select
