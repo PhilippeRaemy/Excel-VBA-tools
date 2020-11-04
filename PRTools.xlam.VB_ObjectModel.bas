@@ -3,69 +3,98 @@ Option Explicit
 Const SevenZip = """C:\Program Files\7-Zip\7z.exe"""
 
 Public Sub ExportCode()
-    ExportCodeImpl
+    CheckinCode Checkin:=False
 End Sub
-
-Public Sub ExportFromFolder()
-
-Dim Fso As New Scripting.FileSystemObject
-Dim File As Scripting.File
-Dim wb As Workbook
-For Each File In Fso.GetFolder("\\kstlon0fs01\Shared\KS&T Global Gas\Installation\XLA").Files
-    Set wb = Application.Workbooks.Open(File.path, ReadOnly:=True)
-    ExportCodeImpl wb, "c:\temp\KochGlobalGas\KochGlobalGas"
-    wb.Close
-Next File
-
+Public Sub Checkin()
+    CheckinCode Checkin:=True
 End Sub
-
-Public Sub ExportCodeImpl(Optional wb As Workbook = Nothing, Optional WorkbookName As Variant)
+Public Sub CheckinCode(Optional Checkin As Boolean, Optional wb As Workbook = Nothing)
     Dim c As Integer, l As Integer
     Dim VBProj
-    Dim Extension As Scripting.Dictionary
-    Set Extension = New Scripting.Dictionary
+    Dim Extension As scripting.Dictionary
+    Set Extension = New scripting.Dictionary
     Extension.Add 1, ".bas"
     Extension.Add 2, ".cls"
     Extension.Add 3, ".frm"
     Extension.Add 100, ".ws.bas"
     
-    Dim ChangedFiles As Scripting.Dictionary
-    Set ChangedFiles = New Scripting.Dictionary
+    Dim ChangedFiles As scripting.Dictionary
+    Set ChangedFiles = New scripting.Dictionary
     Dim FilesToCheckout As String
     Dim FilesToAdd As String
     
-    Dim Fso As FileSystemObject: Set Fso = New FileSystemObject
+    Dim FSO As FileSystemObject: Set FSO = New FileSystemObject
     Dim filename As String, filenameTfs As String
-    Dim ts As Scripting.TextStream
+    Dim ts As scripting.TextStream
     Dim code As String, oldcode As String
     Dim fileStatus As String
     
     Dim wshsh As WshShell: Set wshsh = New WshShell
     
-    Set wb = Application.ActiveWorkbook
+    If wb Is Nothing Then
+        Set wb = Application.ActiveWorkbook
+    End If
     If Not wb Is Nothing Then
         Set VBProj = wb.VBProject
     Else
         Set VBProj = Application.VBE.ActiveVBProject
     End If
-    Dim RootFileName As String
-    If IsMissing(WorkbookName) Then
-        On Error Resume Next
-        RootFileName = VBProj.filename
-        If Err.Number <> 0 Then
-            RootFileName = InputBox("Please enter the Root File Name for the project " & VBProj.Name)
-        End If
-        On Error GoTo 0
-    Else
-        RootFileName = Str(WorkbookName)
-    End If
-    Debug.Print RootFileName
+    Debug.Print VBProj.filename
+    Dim TempFileNameRoot As String: TempFileNameRoot = "f" & Format(Now, "yyyymmdd_hhmmss")
+    Dim TempFileName As String: TempFileName = Environ("tmp") & "\" & TempFileNameRoot & ".tmp"
     For c = 1 To VBProj.VBComponents.Count
         Dim Comp As Variant ' VbComponent
         Set Comp = VBProj.VBComponents(c)
-        filename = RootFileName & "." & Comp.Name & Extension(Comp.Type)
-        Comp.Export filename
+        filename = VBProj.filename & "." & Comp.Name & Extension(Comp.Type)
+        filenameTfs = VBProj.filename & "." & Comp.Name & ".*"
+        If FSO.FileExists(TempFileName) Then FSO.DeleteFile (TempFileName)
+        Comp.Export TempFileName
+        Set ts = FSO.OpenTextFile(TempFileName)
+        code = ts.ReadAll
+        ts.Close
+        fileStatus = "New"
+        If FSO.FileExists(filename) Then
+            Set ts = FSO.OpenTextFile(filename)
+            oldcode = Replace(ts.ReadAll, Mid(FSO.GetFileName(filename), 1, Len(FSO.GetFileName(filename)) - Len(FSO.GetExtensionName(filename)) - 1), TempFileNameRoot)
+            ts.Close
+            If oldcode = code Then
+                fileStatus = "Same"
+            Else
+                fileStatus = "Changed"
+                Debug.Print " file "; Comp.Name; " has changed";
+                If (FSO.GetFile(filename).Attributes And ReadOnly) = ReadOnly Then
+                    ' possibly checked in TFS: try to checkout
+                    FilesToCheckout = FilesToCheckout & " """ & filenameTfs & """"
+                    Debug.Print " and will be checked-out";
+                End If
+                Debug.Print "."
+            End If
+        End If
+        If Not fileStatus = "Same" Then
+            ChangedFiles.Add Comp.Name, filename
+        End If
+        If fileStatus = "New" Then
+            Debug.Print " file "; Comp.Name; " is new."
+            FilesToAdd = FilesToAdd & " """ & filenameTfs & """"
+        End If
     Next c
+    
+    If Checkin And Not FilesToCheckout = "" Then
+        Debug.Print FilesToCheckout
+        wshsh.Run "tf.bat checkout" & FilesToCheckout, WshNormalFocus, True
+    End If
+    
+    For c = 0 To ChangedFiles.Count - 1
+        If FSO.FileExists(ChangedFiles.Items(c)) Then
+            FSO.DeleteFile VBProj.filename & "." & ChangedFiles.Keys(c) & ".*"
+        End If
+        VBProj.VBComponents(ChangedFiles.Keys(c)).Export ChangedFiles.Items(c)
+    Next c
+    
+    If Checkin And Not FilesToAdd = "" Then
+        wshsh.Run "tf.bat add" & FilesToAdd, WshNormalFocus, True
+    End If
+    
     
     Dim cmd As CmdBatch: Set cmd = New CmdBatch
     If Not ActiveWorkbook Is Nothing Then
@@ -73,10 +102,12 @@ Public Sub ExportCodeImpl(Optional wb As Workbook = Nothing, Optional WorkbookNa
         cmd.AddCmd "rd /s /q " & UnzippedFolder
         cmd.AddCmd SevenZip & " x -r -y """ & ActiveWorkbook.FullName & """ * -o" & UnzippedFolder
     End If
-    If Not wb Is Nothing Then
+    If Checkin And Not wb Is Nothing Then
         filename = wb.VBProject.filename
         wb.Save
         wb.Close True
+        cmd.AddCmd "tf.bat checkin  """ & FSO.GetFile(filename).ParentFolder.path & "\*"""
+        cmd.AddCmd "tf.bat checkout """ & filename & """"
     End If
     If cmd.CmdLine <> "" Then
         If Not ActiveWorkbook Is Nothing Then
@@ -190,7 +221,7 @@ End Sub
 Public Function DocumentActiveWorkbook(wshsh As WshShell, Checkin As Boolean) As String
 Dim wb As Workbook, ws As Worksheet, nm As Name, lo As listobject, cell As Range
 Dim TStream    As TextStream
-Dim Fso        As New Scripting.FileSystemObject
+Dim FSO        As New scripting.FileSystemObject
 Dim filename As String
 Dim fCond    As FormatCondition
 Dim vfCond     As Variant
@@ -205,7 +236,7 @@ Dim vfCond     As Variant
         wshsh.Run "tf.bat checkout " & filename, WshNormalFocus, True
     End If
 
-    Set TStream = Fso.OpenTextFile(filename, ForWriting, True)
+    Set TStream = FSO.OpenTextFile(filename, ForWriting, True)
     
     If wb Is Nothing Then Exit Function
     TStream.WriteLine strings.FormatString("Workbook :\t{0}", wb.Name)
@@ -266,4 +297,56 @@ Function FormatConditionToString(ByVal fc As Object) As String
     End Select
     FormatConditionToString = strings.FormatString("{0} type={1}", FormatConditionToString, t)
     FormatConditionToString = strings.FormatString("{0}, applies to {1}", FormatConditionToString, fc.AppliesTo.Address)
+End Function
+
+Function Versions() As Collection
+    Set Versions = New Collection
+    Versions.Add "KochGlobalGas_5_4.xlam"
+    Versions.Add "KochGlobalGas_6_0_0.xlam"
+    Versions.Add "KochGlobalGas_6_0.xlam"
+    Versions.Add "KochGlobalGas_6_1.xlam"
+    Versions.Add "KochGlobalGas_6_1_0.xlam"
+    Versions.Add "KochGlobalGas_6_1_1.xlam"
+    Versions.Add "KochGlobalGas_6_2_0.xlam"
+    Versions.Add "KochGlobalGas_6_2.xlam"
+    Versions.Add "KochGlobalGas_6_3.xlam"
+    Versions.Add "KochGlobalGas_6_4.xlam"
+    Versions.Add "KochGlobalGas_6_2Dev.xlam"
+    Versions.Add "KochGlobalGas_6_4_1.xlam"
+    Versions.Add "KochGlobalGas_6_5.xlam"
+    Versions.Add "KochGlobalGas_6_5_1.xlam"
+    Versions.Add "KochGlobalGas_6_6.xlam"
+    Versions.Add "KochGlobalGas_6_7.xlam"
+    Versions.Add "KochGlobalGas_6_8.xlam"
+    Versions.Add "KochGlobalGas_7_0.xlam"
+    Versions.Add "KochGlobalGas_7_1.xlam"
+    Versions.Add "KochGlobalGas_7_2.xlam"
+    Versions.Add "KochGlobalGas_7_3.xlam"
+    Versions.Add "KochGlobalGas_7_4_win7.xlam"
+    Versions.Add "KochGlobalGas_7_4.xlam"
+    Versions.Add "KochGlobalGas_8_0_old.xlam"
+    Versions.Add "KochGlobalGas_8_0.xlam"
+    Versions.Add "KochGlobalGas_9_0.xlam"
+    Versions.Add "KochGlobalGas_9_1.xlam"
+    Versions.Add "KochGlobalGas_9_2.xlam"
+    Versions.Add "KochGlobalGas_9_3_old.xlam"
+    Versions.Add "KochGlobalGas_9_3.xlam"
+    Versions.Add "KochGlobalGas_9_5.xlam"
+    Versions.Add "KochGlobalGas_10_0.xlam"
+    Versions.Add "KochGlobalGas_10_1.xlam"
+    Versions.Add "KochGlobalGas_10_2.xlam"
+    Versions.Add "KochGlobalGas_10_3.xlam"
+    Versions.Add "KochGlobalGas_10_4.xlam"
+    Versions.Add "KochGlobalGas_10_5.xlam"
+    Versions.Add "KochGlobalGas_10_6.xlam"
+    Versions.Add "KochGlobalGas_10_7.xlam"
+    Versions.Add "KochGlobalGas_10_8.xlam"
+    Versions.Add "KochGlobalGas_10_9.xlam"
+    Versions.Add "KochGlobalGas_10_10.xlam"
+    Versions.Add "KochGlobalGas_10_11.xlam"
+    Versions.Add "KochGlobalGas_10_12.xlam"
+    Versions.Add "KochGlobalGas_10_13.xlam"
+    Versions.Add "KochGlobalGas_10_14.xlam"
+    Versions.Add "KochGlobalGas_10_15.xlam"
+
 End Function
