@@ -1,11 +1,11 @@
 Attribute VB_Name = "HTMLColors"
 Option Explicit
 
-Private ColorRef As scripting.Dictionary
+Private ColorRef As Scripting.Dictionary
 Private Inited As Boolean
-Private Reds As scripting.Dictionary
-Private Greens As scripting.Dictionary
-Private Blues As scripting.Dictionary
+Private Reds As Scripting.Dictionary
+Private Greens As Scripting.Dictionary
+Private Blues As Scripting.Dictionary
 
 Public Sub test(r As Integer, g As Integer, b As Integer)
     Dim c As Range, COl As HtmlColor
@@ -90,7 +90,7 @@ End Sub
 
 Private Sub Init()
     If ColorRef Is Nothing Then
-        Set ColorRef = New scripting.Dictionary
+        Set ColorRef = New Scripting.Dictionary
         AddColor "Pink", 255, 192, 203
         AddColor "LightPink", 255, 182, 193
         AddColor "HotPink", 255, 105, 180

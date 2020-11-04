@@ -105,8 +105,8 @@ Public Function MSubstitute(OldText As String, Searches As Range, Replaces As Ra
 End Function
 
 Public Function DeduplicateWords(text As String, Separator As String, Optional Compare As VbCompareMethod = VbCompareMethod.vbTextCompare) As String
-    Dim w As Variant, d As scripting.Dictionary
-    Set d = New scripting.Dictionary
+    Dim w As Variant, d As Scripting.Dictionary
+    Set d = New Scripting.Dictionary
     For Each w In Split(text, Separator, Compare:=Compare)
         If Not d.Exists(w) Then
             DeduplicateWords = IIf(DeduplicateWords = "", "", DeduplicateWords & Separator) & w

@@ -5,8 +5,8 @@ Attribute VB_Name = "Logger"
 Option Explicit
 
 Private Const Logging As Boolean = True
-Public WorkBookName As String
-Private FSO As FileSystemObject
+Public WorkbookName As String
+Private Fso As FileSystemObject
 Private pLogFileName As String
 Private Inited As Boolean
 Private lErrHelpContext As String
@@ -39,8 +39,8 @@ End Property
 Public Property Get LogFileName()
     Dim ai As AddIn
     If Not Inited Then
-        If WorkBookName = "" Then WorkBookName = ActiveWorkbook.Name
-        If pLogFileName = "" Then pLogFileName = Environ("temp") & "\" & WorkBookName & "_" & Format(Now, "yyyymmdd") & ".log"
+        If WorkbookName = "" Then WorkbookName = ActiveWorkbook.Name
+        If pLogFileName = "" Then pLogFileName = Environ("temp") & "\" & WorkbookName & "_" & Format(Now, "yyyymmdd") & ".log"
         For Each ai In AddIns
             If ai.Name = "PRTools.xlam" And ai.Installed And ai.IsOpen Then
                 Application.Run "ExportCode"
@@ -79,9 +79,9 @@ Private Sub logmsg(Msg As String, ParamArray Parms() As Variant)
     Next i
     filename = LogFileName
     Debug.Print Msg
-    If FSO Is Nothing Then Set FSO = New FileSystemObject
+    If Fso Is Nothing Then Set Fso = New FileSystemObject
     
-    Set ts = FSO.OpenTextFile(filename, ForAppending, True)
+    Set ts = Fso.OpenTextFile(filename, ForAppending, True)
     ts.Write Format(Now, "yyyymmdd hhmmss")
     ts.Write " - "
     ts.WriteLine Msg

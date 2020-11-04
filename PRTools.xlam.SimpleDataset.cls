@@ -138,7 +138,7 @@ Proc:
   Next r
   DistinctColumnValue = c
 End Property
-Public Function RowToDictionary() As scripting.Dictionary
+Public Function RowToDictionary() As Scripting.Dictionary
 On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
@@ -147,8 +147,8 @@ Err_Proc:
   Resume
   Exit Function
 Proc:
-  Dim dic As scripting.Dictionary
-  Set dic = New scripting.Dictionary
+  Dim dic As Scripting.Dictionary
+  Set dic = New Scripting.Dictionary
   Dim i As Integer
   For i = LBound(mFields) To UBound(mFields)
     dic.Add mFields(i), mValues(cRecord)(i)
