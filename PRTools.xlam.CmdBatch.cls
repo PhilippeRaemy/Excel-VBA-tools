@@ -25,8 +25,11 @@ Public Property Get CmdLine() As String
     If batch <> "" Then CmdLine = batch & """"
 End Property
 
-Public Sub Run()
+Public Sub Run(Optional CurrentDirectory As String)
     Dim wshsh As New WshShell
+    If Not CurrentDirectory = "" Then
+        wshsh.CurrentDirectory = CurrentDirectory
+    End If
     Dim cmd As String: cmd = CmdLine()
     Debug.Print cmd
     wshsh.Run cmd, WshNormalFocus, False

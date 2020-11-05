@@ -3,10 +3,32 @@ Option Explicit
 Const SevenZip = """C:\Program Files\7-Zip\7z.exe"""
 
 Public Sub ExportCode()
-    CheckinCode
+    ExportCodeImpl
 End Sub
 
-Public Sub CheckinCode(Optional wb As Workbook = Nothing)
+
+Public Sub ExportVersionsFromFolder()
+Dim File As Variant
+Const FolderName = "\\kstlon0fs01\Shared\KS&T Global Gas\Installation\XLA\"
+Const TargetFolderName = "C:\temp\KochGlobalGas\"
+Const RootFileName = "KochGlobalGas"
+Dim wb As Workbook
+Dim cmd As CmdBatch:
+    For Each File In Versions
+        Debug.Print File
+        Set wb = Application.Workbooks.Open(FolderName & File, ReadOnly:=True)
+        ExportCodeImpl wb, TargetFolderName, RootFileName
+        wb.Close
+        Set cmd = New CmdBatch
+        cmd.AddCmd "git add ."
+        cmd.AddCmd "git commit -m " & File
+        cmd.Run TargetFolderName
+    Next File
+End Sub
+
+
+
+Public Sub ExportCodeImpl(Optional ByVal wb As Workbook = Nothing, Optional TargetFolder As String, Optional RootFileName As String)
     Dim c As Integer, l As Integer
     Dim VBProj
     Dim Comp As Variant ' VbComponent
@@ -29,7 +51,11 @@ Public Sub CheckinCode(Optional wb As Workbook = Nothing)
     Debug.Print VBProj.FileName
     For c = 1 To VBProj.VBComponents.Count
         Set Comp = VBProj.VBComponents(c)
-        FileName = VBProj.FileName & "." & Comp.Name & Extension(Comp.Type)
+        If RootFileName = "" Or TargetFolder = "" Then
+            FileName = VBProj.FileName & "." & Comp.Name & Extension(Comp.Type)
+        Else
+            FileName = TargetFolder & RootFileName & "." & Comp.Name & Extension(Comp.Type)
+        End If
         Comp.Export FileName
     Next c
         
