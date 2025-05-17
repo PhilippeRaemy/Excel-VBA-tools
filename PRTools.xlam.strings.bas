@@ -77,12 +77,12 @@ Public Function SplitStringH(s As String, delimiter As String) As Variant
 End Function
 
 Public Function SplitStringV(s As String, delimiter As String) As Variant
-    Dim results, pivoted As Variant, i As Integer
-    results = VBA.Split(s, delimiter)
+    Dim Results, pivoted As Variant, i As Integer
+    Results = VBA.Split(s, delimiter)
     pivoted = Array()
-    ReDim pivoted(0 To UBound(results), 0 To 0)
-    For i = LBound(results) To UBound(results)
-        pivoted(i, 0) = results(i)
+    ReDim pivoted(0 To UBound(Results), 0 To 0)
+    For i = LBound(Results) To UBound(Results)
+        pivoted(i, 0) = Results(i)
     Next i
     SplitStringV = pivoted
    
@@ -172,11 +172,11 @@ a = Array( _
     Array("a,b,c,d,e", -6, "a,b,c,d,e") _
 )
     Dim t As Variant
-    Dim results As String
+    Dim Results As String
     For Each t In a
-        results = RemoveWord(CStr(t(0)), ",", CInt(t(1)))
-        Debug.Print "RemoveWord(""" & t(0) & """, " & t(1) & ")=" & results, results = CStr(t(2))
-        Debug.Assert results = CStr(t(2))
+        Results = RemoveWord(CStr(t(0)), ",", CInt(t(1)))
+        Debug.Print "RemoveWord(""" & t(0) & """, " & t(1) & ")=" & Results, Results = CStr(t(2))
+        Debug.Assert Results = CStr(t(2))
     Next t
 End Sub
 

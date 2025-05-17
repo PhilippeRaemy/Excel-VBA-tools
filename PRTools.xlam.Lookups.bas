@@ -14,13 +14,13 @@ Dim c As Range
         End If
     Next c
 End Function
-Function ConcatUntil(source As Range, stopper As Range, Optional Separator As String = " ") As String
+Function ConcatUntil(Source As Range, stopper As Range, Optional Separator As String = " ") As String
 Dim r As Integer, c As Integer
 
-    For r = 1 To source.columns.Count
-        For c = 1 To source.Rows.Count
+    For r = 1 To Source.columns.Count
+        For c = 1 To Source.Rows.Count
             If stopper.Cells(r, c).Value <> 0 Then Exit Function
-            ConcatUntil = ConcatUntil & IIf(ConcatUntil = "", "", Separator) & source.Cells(r, c).Value
+            ConcatUntil = ConcatUntil & IIf(ConcatUntil = "", "", Separator) & Source.Cells(r, c).Value
         Next c
     Next r
         

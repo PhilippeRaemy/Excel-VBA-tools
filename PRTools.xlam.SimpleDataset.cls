@@ -39,7 +39,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.MoveNextUndeleted"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
 Proc:
   While Not (eof Or bof)
@@ -59,7 +59,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.SetFields"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
   Exit Sub
 Proc:
@@ -72,7 +72,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.value"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
   Exit Sub
 Proc:
@@ -83,7 +83,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.value"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
   Exit Property
 Proc:
@@ -94,7 +94,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.ColumnValue"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
   Exit Sub
 Proc:
@@ -115,7 +115,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.DistinctColumnValue"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
   Exit Sub
 Proc:
@@ -143,7 +143,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.value"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
   Exit Function
 Proc:
@@ -160,7 +160,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.FieldId"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
   Exit Sub
 Proc:
@@ -179,7 +179,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.Append"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
   Exit Sub
 Proc:
@@ -223,7 +223,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.Filter"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
   Exit Function
 Proc:
@@ -260,7 +260,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.Delete"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
   Exit Sub
 Proc:
@@ -272,7 +272,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.Undelete"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
   Exit Sub
 Proc:
@@ -284,7 +284,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.UndeleteAll"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
   Exit Sub
 Proc:
@@ -298,7 +298,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.Pack"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
   Exit Function
 Proc:
@@ -313,7 +313,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.AppendTo"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
   Exit Sub
 Proc:
@@ -330,7 +330,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.Clone"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
   Exit Function
 Proc:
@@ -347,7 +347,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.Concat"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
   Exit Function
 Proc:
@@ -363,7 +363,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.FromListObject"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
   Exit Sub
 Proc:
@@ -444,7 +444,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.Make2DArray"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
   Exit Function
 Proc:
@@ -482,7 +482,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.MakeArrayOfArray"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
   Exit Function
 Proc:
@@ -515,7 +515,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.ApplyArrayToRange"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
 Proc:
   If Not rng Is Nothing Then rng.Clear
@@ -536,7 +536,7 @@ On Error GoTo Err_Proc:
 GoTo Proc
 Err_Proc:
   Logger.error "Error {0} in {2}: {1}", Err.Number, Err.Description, "SimpleDataset.ApplyArrayToListObject"
-  Err.Raise Err.Number, Err.source, Err.Description, Err.HelpFile, Err.HelpContext
+  Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
   Resume
   Exit Sub
 Proc:

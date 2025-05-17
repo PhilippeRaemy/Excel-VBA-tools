@@ -9,16 +9,37 @@ End Sub
 
 Public Sub ExportVersionsFromFolder()
 Dim File As Variant
+Dim fso As New scripting.FileSystemObject
 Const FolderName = "\\kstlon0fs01\Shared\KS&T Global Gas\Installation\XLA\"
-Const TargetFolderName = "C:\temp\KochGlobalGas\"
+Const TargetFolderName = "C:\dev\GlobalGasAnalytics\XLA\"
+Const TargetVbaFolderName = "C:\dev\GlobalGasAnalytics\XLA\KochGlobalGas.vba\"
+Dim FileObject As scripting.File
+Dim TargetFileObject As scripting.File
+Dim targetFolder As scripting.Folder
+If Not fso.FolderExists(FolderName) Then fso.CreateFolder FolderName
+Set targetFolder = fso.GetFolder(FolderName)
+If Not fso.FolderExists(TargetVbaFolderName) Then fso.CreateFolder TargetVbaFolderName
+Dim vbaTargetFolder As scripting.Folder: Set vbaTargetFolder = fso.GetFolder(TargetVbaFolderName)
+
+
 Const RootFileName = "KochGlobalGas"
 Dim wb As Workbook
-Dim cmd As CmdBatch:
+Dim cmd As CmdBatch
+
     For Each File In Versions
-        Debug.Print File
-        Set wb = Application.Workbooks.Open(FolderName & File, ReadOnly:=True)
-        ExportCodeImpl wb, TargetFolderName, RootFileName
-        wb.Close
+        Debug.Print FolderName & File
+        On Error Resume Next
+        Do While True
+            Err.Clear
+            fso.CopyFile FolderName & File, TargetFolderName & "KochGlobalGas.xlam", True
+            If Err.Number = 0 Then Exit Do
+            DoEvents
+        Loop
+        On Error GoTo 0
+        fso.DeleteFolder vbaTargetFolder.path, True
+        fso.CreateFolder TargetVbaFolderName
+        Set wb = Application.Workbooks.Open(TargetFolderName & "KochGlobalGas.xlam", ReadOnly:=True)
+        ExportCodeImpl wb, TargetFolderName & "KochGlobalGas.vba\", RootFileName
         Set cmd = New CmdBatch
         cmd.AddCmd "git add ."
         cmd.AddCmd "git commit -m " & File
@@ -28,20 +49,24 @@ End Sub
 
 
 
-Public Sub ExportCodeImpl(Optional ByVal wb As Workbook = Nothing, Optional TargetFolder As String, Optional RootFileName As String)
+Public Sub ExportCodeImpl(Optional ByVal pwb As Workbook = Nothing, Optional targetFolder As String, Optional RootFileName As String)
     Dim c As Integer, l As Integer
     Dim VBProj
     Dim Comp As Variant ' VbComponent
     Dim FileName As String
     Dim Extension As scripting.Dictionary
     Set Extension = New scripting.Dictionary
+    Dim wb As Workbook
+    Dim UnzippedFolder As String
     Extension.Add 1, ".bas"
     Extension.Add 2, ".cls"
     Extension.Add 3, ".frm"
     Extension.Add 100, ".ws.bas"
     
-    If wb Is Nothing Then
+    If pwb Is Nothing Then
         Set wb = Application.ActiveWorkbook
+    Else
+        Set wb = pwb
     End If
     If Not wb Is Nothing Then
         Set VBProj = wb.VBProject
@@ -51,32 +76,37 @@ Public Sub ExportCodeImpl(Optional ByVal wb As Workbook = Nothing, Optional Targ
     Debug.Print VBProj.FileName
     For c = 1 To VBProj.VBComponents.Count
         Set Comp = VBProj.VBComponents(c)
-        If RootFileName = "" Or TargetFolder = "" Then
+        If RootFileName = "" Or targetFolder = "" Then
             FileName = VBProj.FileName & "." & Comp.Name & Extension(Comp.Type)
         Else
-            FileName = TargetFolder & RootFileName & "." & Comp.Name & Extension(Comp.Type)
+            FileName = targetFolder & RootFileName & "." & Comp.Name & Extension(Comp.Type)
         End If
         Comp.Export FileName
     Next c
         
     Dim cmd As CmdBatch: Set cmd = New CmdBatch
-    If Not ActiveWorkbook Is Nothing Then
-        Dim UnzippedFolder As String: UnzippedFolder = """" & ActiveWorkbook.FullName & ".unzipped"""
+    If pwb Is Nothing And Not ActiveWorkbook Is Nothing Then
+        UnzippedFolder = """" & ActiveWorkbook.FullName & ".unzipped"""
         cmd.AddCmd "rd /s /q " & UnzippedFolder
         cmd.AddCmd SevenZip & " x -r -y """ & ActiveWorkbook.FullName & """ * -o" & UnzippedFolder
+    Else
+        If Not pwb Is Nothing Then
+            UnzippedFolder = """" & wb.FullName & ".unzipped"""
+            cmd.AddCmd "rd /s /q " & UnzippedFolder
+            cmd.AddCmd SevenZip & " x -r -y """ & wb.FullName & """ * -o" & UnzippedFolder
+        End If
     End If
     If Not wb Is Nothing Then
         FileName = wb.VBProject.FileName
-        wb.Save
         wb.Close True
     End If
     If cmd.CmdLine <> "" Then
-        If Not ActiveWorkbook Is Nothing Then
+        If pwb Is Nothing And Not ActiveWorkbook Is Nothing Then
             cmd.AddRestartWorkbook ActiveWorkbook.FullName
             ActiveWorkbook.Close
         End If
         cmd.Run
-        Application.Quit
+        If pwb Is Nothing Then Application.Quit
     End If
     
 End Sub
@@ -182,7 +212,7 @@ End Sub
 Public Function DocumentActiveWorkbook(wshsh As WshShell, Checkin As Boolean) As String
 Dim wb As Workbook, ws As Worksheet, nm As Name, lo As listobject, cell As Range
 Dim TStream    As TextStream
-Dim FSO        As New scripting.FileSystemObject
+Dim fso        As New scripting.FileSystemObject
 Dim FileName As String
 Dim fCond    As FormatCondition
 Dim vfCond     As Variant
@@ -197,7 +227,7 @@ Dim vfCond     As Variant
         wshsh.Run "tf.bat checkout " & FileName, WshNormalFocus, True
     End If
 
-    Set TStream = FSO.OpenTextFile(FileName, ForWriting, True)
+    Set TStream = fso.OpenTextFile(FileName, ForWriting, True)
     
     If wb Is Nothing Then Exit Function
     TStream.WriteLine strings.FormatString("Workbook :\t{0}", wb.Name)
@@ -311,4 +341,5 @@ Function Versions() As Collection
     Versions.Add "KochGlobalGas_10_15.xlam"
 
 End Function
+
 

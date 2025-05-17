@@ -34,3 +34,4 @@ Public Sub Run(Optional CurrentDirectory As String)
     Debug.Print cmd
     wshsh.Run cmd, WshNormalFocus, False
 End Sub
+

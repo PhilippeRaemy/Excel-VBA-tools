@@ -1,17 +1,17 @@
 Attribute VB_Name = "SqlGen"
 Option Explicit
 
-Public Function GenInsert(ByVal tablename As String, ByVal columns As Range, ByVal Values As Range) As String
-    GenInsert = GenInsertHead(tablename, columns)
+Public Function GenInsert(ByVal TableName As String, ByVal columns As Range, ByVal Values As Range) As String
+    GenInsert = GenInsertHead(TableName, columns)
     
 End Function
 
-Public Function GenInsertHead(ByVal tablename As String, ByVal columns As Range) As String
+Public Function GenInsertHead(ByVal TableName As String, ByVal columns As Range) As String
     Dim i As Integer, cell As Range
     For Each cell In columns.Cells
         If i = 0 Then
             i = 1
-            GenInsertHead = "insert into " & tablename & "("
+            GenInsertHead = "insert into " & TableName & "("
         Else
             GenInsertHead = GenInsertHead & ", "
         End If

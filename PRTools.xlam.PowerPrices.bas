@@ -13,11 +13,11 @@ Dim SeriesNames() As String
 Dim SeriesName As Variant
 Dim Observations() As String
 Dim c As Integer, r As Integer
-Dim FSO As New FileSystemObject
+Dim fso As New FileSystemObject
 Dim ts As TextStream
 Const OUTFILENAME = "c:\temp\Gundies_CXL_RECOVERY_20150227_000000.csv"
     
-    Set ts = FSO.OpenTextFile(OUTFILENAME, ForAppending, True)
+    Set ts = fso.OpenTextFile(OUTFILENAME, ForAppending, True)
     Set lastCell = ActiveCell.SpecialCells(xlLastCell)
     Dates = ActiveSheet.Range("f1", ActiveSheet.Cells(1, lastCell.column)).Value
     Series = ActiveSheet.Range("e2", ActiveSheet.Cells(lastCell.Row, 5)).Value

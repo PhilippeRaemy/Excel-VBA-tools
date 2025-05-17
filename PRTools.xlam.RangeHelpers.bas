@@ -87,11 +87,11 @@ Private Sub testcolumnsname()
     Next c
     Debug.Print "Done!"
 End Sub
-Public Function GetColumnsOrdinalDictionary(rng As Range, ParamArray ColumnNames() As Variant)
+Public Function GetColumnsOrdinalDictionary(rng As Range, ParamArray columnNames() As Variant)
     Dim colName As Variant
     Dim dic As scripting.Dictionary: Set dic = New scripting.Dictionary
     
-    For Each colName In ColumnNames
+    For Each colName In columnNames
         dic(colName) = Application.WorksheetFunction.Match(colName, rng, False)
     Next colName
     Set GetColumnsOrdinalDictionary = dic

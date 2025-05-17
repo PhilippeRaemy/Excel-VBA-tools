@@ -138,7 +138,7 @@ End Sub
 
 Function ArrayToString(a As Variant) As String
 Dim i As Integer, j As Integer
-Dim results() As String, r As Integer
+Dim Results() As String, r As Integer
     Select Case ArrayDim(a)
         Case 0: ArrayToString = "Array()"
         Case 1:

@@ -5,7 +5,7 @@ Attribute VB_Name = "Helpers"
 Sub CreateODBCQuery(sql As String, tag As String)
     With sh.ListObjects.Add _
         (SourceType:=0 _
-        , source:=Array( _
+        , Source:=Array( _
             "OLEDB;Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=True;Data Source=kstlon0db003;Use Procedure for Prepare=1;" _
           , "Auto Translate=True;Packet Size=4096;Use Encryption for Data=False;Tag with column collation when possible=" _
           , "False;Initial Catalog=TimeSeries") _
@@ -49,14 +49,14 @@ Dim rng As Range, i As Integer, addr As String
     Set MakeRange = Range(Left(addr, Len(addr) - 1))
 End Function
 
-Function MakeInsert(tablename As String, columns As Variant, Values As Variant, Optional union As String) As String
+Function MakeInsert(TableName As String, columns As Variant, Values As Variant, Optional union As String) As String
 Dim cell As Range, ValueExpression As String, i As Integer, colNames() As String
     If Not columns.Cells.Count = Values.Cells.Count Then
         MakeInsert = "columns and values do not match"
         Exit Function
     End If
     If union = "" Then
-        MakeInsert = "INSERT INTO [" & tablename & "]("
+        MakeInsert = "INSERT INTO [" & TableName & "]("
     Else
         ReDim colNames(columns.Cells.Count - 1)
     End If
